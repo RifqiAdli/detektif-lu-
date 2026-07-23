@@ -127,6 +127,12 @@
             padding: 10px 20px; font-size: 1.5rem; font-weight: bold; transform: rotate(-15deg);
             opacity: 0.8; letter-spacing: 5px; text-transform: uppercase;
         }
+
+        /* CUTSCENE / PROLOG / ENDING TAMBAHAN */
+        .cutscene-text { font-family: 'Courier New', Courier, monospace; }
+        #prolog-overlay, #nightmare-overlay, #badend-overlay { z-index: 200; }
+        @keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; } 20%,24%,55% { opacity: 0.4; } }
+        .flicker-title { animation: flicker 3s infinite; }
     </style>
 </head>
 <body>
@@ -141,6 +147,31 @@
             <input type="text" id="inputNamaDetektif" class="form-control w-50 mb-4 text-center fs-4 bg-dark text-light border-danger" placeholder="Masukkan Nama Detektif...">
             <button class="action-btn w-auto px-5 danger" onclick="startGame()">SAYA SIAP MENGHADAPI TUGAS INI</button>
             <p id="errorNama" class="text-danger mt-2" style="display:none;">Nama tidak boleh kosong!</p>
+        </div>
+
+        <!-- LAYAR PROLOG CERITA -->
+        <div id="prolog-overlay" class="overlay-screen" style="display:none; background:#000;">
+            <div style="max-width:700px; padding: 20px;">
+                <h3 class="flicker-title" style="color: var(--blood-red); letter-spacing: 3px; margin-bottom: 25px;">— BABAK PEMBUKA —</h3>
+                <p id="prolog-text" class="cutscene-text" style="font-size:1.1rem; line-height:1.9; min-height:180px; text-align:left;"></p>
+                <button id="prolog-next-btn" class="action-btn danger w-auto px-5" style="display:none;" onclick="nextProlog()">LANJUTKAN ›</button>
+            </div>
+        </div>
+
+        <!-- CUTSCENE SEKILAS BAYANGAN (SAAT PERTAMA MASUK TKP) -->
+        <div id="nightmare-overlay" class="overlay-screen" style="display:none; background:#1a0000;">
+            <div style="max-width:700px; padding:20px;">
+                <h3 style="color: var(--blood-red); letter-spacing:3px;">⚠ SEKILAS BAYANGAN ⚠</h3>
+                <p id="nightmare-text" class="cutscene-text" style="font-size:1.05rem; line-height:1.9; min-height:140px;"></p>
+                <button id="nightmare-next-btn" class="action-btn danger w-auto px-4" style="display:none;" onclick="lanjutDariNightmare()">...lanjutkan dengan waspada</button>
+            </div>
+        </div>
+
+        <!-- LAYAR ENDING GAGAL (SALAH TUDUH 2X) -->
+        <div id="badend-overlay" class="overlay-screen" style="display:none; background:#000;">
+            <h1 style="font-size:2.5rem; color: var(--blood-red); letter-spacing:4px;">TAMAT — KASUS GAGAL</h1>
+            <p id="badend-text" class="cutscene-text" style="max-width:700px; font-size:1.05rem; line-height:1.9; min-height:140px; padding: 0 20px;"></p>
+            <button id="badend-restart-btn" class="btn btn-light btn-lg px-5 py-3 fw-bold mt-3" style="display:none; color:black;" onclick="location.reload()">ULANGI INVESTIGASI</button>
         </div>
 
         <!-- LAYAR TELEPON MASUK (JUMPSCARE) -->
@@ -158,7 +189,7 @@
                 <div id="dialogue-box"><span id="typewriter">Memuat data lingkungan...</span></div>
 
                 <div id="scene-koridor" class="scene">
-                    <button class="action-btn" onclick="changeScene('tkp', 'Kamu menggeser pintu Gerbong Eksekutif. Hawa dingin menyergap. Teknisi tewas dengan posisi janggal.')">> 1. Periksa TKP (Gerbong Eksekutif)</button>
+                    <button class="action-btn" onclick="masukTKP()">> 1. Periksa TKP (Gerbong Eksekutif)</button>
                     <button class="action-btn" onclick="cekRuangKondektur()">> 2. Periksa Ruang Kondektur (Terminal Komputer)</button>
                     <button class="action-btn" onclick="changeScene('saksi', 'Kamu menuju Kereta Makan. Dua penumpang dan satu Kondektur duduk saling berjauhan, saling curiga.')">> 3. Interogasi Saksi (Kereta Makan)</button>
                     <button class="action-btn danger mt-4" id="btn-tuduh" style="display:none;" onclick="changeScene('akhir', 'Bukti telah terkumpul. Jangan sampai salah menunjuk pelakunya.')">> KELUARKAN SURAT PENAHANAN</button>
@@ -419,9 +450,63 @@
         
         if(audioCtx.state === 'suspended') audioCtx.resume();
         document.getElementById('start-overlay').style.display = 'none';
-        
-        playHorrorDrone(); 
-        changeScene('koridor', `Selamat bertugas, Detektif ${namaDetektifAsli}. Kereta KA Pangrango terus melaju menembus malam yang pekat. Seorang teknisi telah dihabisi. Pembunuhnya sangat terorganisir. Tetap waspada.`);
+
+        showProlog();
+    }
+
+    // ================== PROLOG CERITA (BABAK PEMBUKA) ==================
+    let prologTimer;
+    let prologIndex = 0;
+
+    function getPrologTeks() {
+        return [
+            "23 Juli 2026. Hujan mengguyur jalur selatan Pulau Jawa. KA Pangrango melaju membelah kabut menuju Sukabumi, membawa para penumpang yang tak menyangka malam ini akan menjadi malam terakhir bagi salah satu dari mereka.",
+            `Kamu, Detektif ${namaDetektifAsli}, dibangunkan paksa oleh telepon dari Biro Investigasi Independen. Suara di ujung telepon hanya berkata singkat: "Ada mayat di Gerbong Eksekutif. Kereta tidak boleh berhenti sampai stasiun berikutnya. Cari pembunuhnya sebelum itu."`,
+            "Begitu kakimu menapak lorong gerbong, lampu-lampu berkedip pelan. Bau besi dan sesuatu yang lebih pekat menyeruak dari ujung koridor. Entah kenapa, kamu merasa sesuatu di kereta ini sudah tahu bahwa kamu datang..."
+        ];
+    }
+
+    function showProlog() {
+        document.getElementById('prolog-overlay').style.display = 'flex';
+        playHorrorDrone();
+        prologIndex = 0;
+        renderProlog();
+    }
+
+    function renderProlog() {
+        document.getElementById('prolog-next-btn').style.display = 'none';
+        const teks = getPrologTeks()[prologIndex];
+        prologTypeWriter(teks, 'prolog-text', () => {
+            document.getElementById('prolog-next-btn').style.display = 'inline-block';
+        });
+    }
+
+    function nextProlog() {
+        prologIndex++;
+        if (prologIndex < getPrologTeks().length) {
+            renderProlog();
+        } else {
+            document.getElementById('prolog-overlay').style.display = 'none';
+            changeScene('koridor', `Selamat bertugas, Detektif ${namaDetektifAsli}. Kereta KA Pangrango terus melaju menembus malam yang pekat. Seorang teknisi telah dihabisi. Pembunuhnya sangat terorganisir. Tetap waspada.`);
+        }
+    }
+
+    // Mesin ketik generik untuk cutscene (terpisah dari typeWriter utama agar tidak bentrok scene)
+    function prologTypeWriter(text, elId, callback) {
+        const el = document.getElementById(elId);
+        el.innerHTML = '';
+        let i = 0;
+        clearInterval(prologTimer);
+        prologTimer = setInterval(() => {
+            if (i < text.length) {
+                el.innerHTML += text.charAt(i);
+                if (i % 3 === 0) playType();
+                i++;
+            } else {
+                clearInterval(prologTimer);
+                if (callback) callback();
+            }
+        }, 28);
     }
 
     function typeWriter(text) {
@@ -470,6 +555,27 @@
             typeWriter(`Barang bukti krusial [${namaBarang}] dimasukkan ke dalam Tas Bukti.`);
             cekProgres();
         }
+    }
+
+    // ================== CUTSCENE SEKILAS BAYANGAN ==================
+    function masukTKP() {
+        if (!state.mimpiShown) {
+            state.mimpiShown = true;
+            document.getElementById('nightmare-overlay').style.display = 'flex';
+            playHorrorDrone();
+            prologTypeWriter(
+                "Begitu pintu tergeser, waktu serasa berhenti sejenak. Sekilas, bayangan sesosok tubuh berdiri di ujung lorong menatapmu tanpa berkedip — lalu lenyap saat kamu mengerjap. Detak jantungmu menjadi satu-satunya suara di gerbong yang terasa jauh lebih dingin dari seharusnya.",
+                'nightmare-text',
+                () => { document.getElementById('nightmare-next-btn').style.display = 'inline-block'; }
+            );
+        } else {
+            changeScene('tkp', 'Kamu kembali menggeser pintu Gerbong Eksekutif. Bau anyir masih menggantung berat di udara.');
+        }
+    }
+
+    function lanjutDariNightmare() {
+        document.getElementById('nightmare-overlay').style.display = 'none';
+        changeScene('tkp', 'Kamu menggeser pintu Gerbong Eksekutif. Hawa dingin menyergap. Teknisi tewas dengan posisi janggal.');
     }
 
     function periksaMayat() {
@@ -547,13 +653,16 @@
         let opsi = '';
         if(nama === 'Tatang') {
             opsi = `<button class="action-btn" onclick="bicara('Tatang', 'Tidur! Saya tidur pulas di gerbong saya!')">> "Di mana Anda pada pukul 22:30?"</button>
-                    <button class="action-btn" onclick="bicara('Tatang', 'Saya pedagang kain, Pak Detektif. Tidak kenal teknisi itu.')">> "Apa hubungan Anda dengan korban?"</button>`;
+                    <button class="action-btn" onclick="bicara('Tatang', 'Saya pedagang kain, Pak Detektif. Tidak kenal teknisi itu.')">> "Apa hubungan Anda dengan korban?"</button>
+                    <button class="action-btn" style="background-color:#4a4020; border-color:#4a4020;" onclick="galiLebihDalam('Tatang')">> [Tekan Lebih Dalam] "Anda yakin dengan alibi itu?"</button>`;
         } else if(nama === 'Rina') {
             opsi = `<button class="action-btn" onclick="bicara('Rina', 'Saya di kabin Eksekutif 1. Sedang membaca buku sejak jam 21:30.')">> "Aktivitas Anda sejak pukul 21:30?"</button>
-                    <button class="action-btn" onclick="bicara('Rina', 'Pintu gerbong ini sangat berat. Itu saja yang mengganggu saya.')">> "Mendengar keributan?"</button>`;
+                    <button class="action-btn" onclick="bicara('Rina', 'Pintu gerbong ini sangat berat. Itu saja yang mengganggu saya.')">> "Mendengar keributan?"</button>
+                    <button class="action-btn" style="background-color:#4a4020; border-color:#4a4020;" onclick="galiLebihDalam('Rina')">> [Tekan Lebih Dalam] "Anda yakin dengan alibi itu?"</button>`;
         } else if(nama === 'Bima') {
             opsi = `<button class="action-btn" onclick="bicara('Bima', 'Tepat pada jam 22:30, saya sedang patroli di dalam Gerbong 3.')">> "Rute patroli Anda pukul 22:30?"</button>
-                    <button class="action-btn" onclick="bicara('Bima', 'Pasti ada penyusup dari luar.')">> "Siapa pelakunya?"</button>`;
+                    <button class="action-btn" onclick="bicara('Bima', 'Pasti ada penyusup dari luar.')">> "Siapa pelakunya?"</button>
+                    <button class="action-btn" style="background-color:#4a4020; border-color:#4a4020;" onclick="galiLebihDalam('Bima')">> [Tekan Lebih Dalam] "Anda yakin dengan alibi itu?"</button>`;
         }
 
         document.getElementById('daftar-saksi').style.display = 'none';
@@ -569,6 +678,18 @@
     }
 
     function bicara(nama, teks) { typeWriter(`[Transkrip - ${nama}]: "${teks}"`); }
+
+    function galiLebihDalam(nama) {
+        let teks = '';
+        if (nama === 'Tatang') {
+            teks = "Tangan Bapak Tatang mulai gemetar. \"Saya... saya sempat dengar langkah berat lewat di depan gerbong saya, sekitar jam setengah 11. Berat, seperti sepatu boots dinas. Saya kira itu Kondektur yang sedang berpatroli malam.\"";
+        } else if (nama === 'Rina') {
+            teks = "Nyonya Rina menunduk, suaranya melirih. \"Saya sempat mengintip lewat celah tirai. Ada siluet berseragam kondektur berdiri lama sekali di depan Gerbong 3, diam, seolah menunggu sesuatu. Itu bukan pola patroli biasa.\"";
+        } else if (nama === 'Bima') {
+            teks = "Kondektur Bima tiba-tiba tersenyum tipis, matanya tak berkedip. \"Anda yakin ingin tahu rute pastinya, Detektif? Baiklah... saya memang berhenti sebentar di depan Gerbong 3. Hanya sebentar. Untuk... memeriksa kunci.\"";
+        }
+        typeWriter(`[Interogasi Mendalam - ${nama}]: "${teks}"`);
+    }
 
     function cekProgres() {
         if (state.inventory.includes('Kartu GAPEKA') && state.inventory.includes('Log Sensor & Sandi Kotak')) {
@@ -602,10 +723,30 @@
             
             typeWriter("Selamat, Detektif. Kamu berhasil mengirim monster sesungguhnya ke balik jeruji besi.");
         } else {
-            playError();
-            playHorrorDrone();
-            typeWriter("PENANGKAPAN GAGAL. Tersangka yang kamu pilih memiliki alibi logis. Tiba-tiba lampu kereta padam... dan kamu merasakan sentuhan dingin di lehermu...");
+            state.percobaanGagal = (state.percobaanGagal || 0) + 1;
+
+            if (state.percobaanGagal >= 2) {
+                triggerBadEnding(pelaku);
+            } else {
+                playError();
+                playHorrorDrone();
+                typeWriter("PENANGKAPAN GAGAL. Tersangka yang kamu pilih memiliki alibi logis. Tiba-tiba lampu kereta padam... dan kamu merasakan sentuhan dingin di lehermu... (Pikirkan lagi baik-baik, satu kesalahan lagi bisa berakibat fatal.)");
+            }
         }
+    }
+
+    // ================== ENDING GAGAL (SALAH TUDUH 2X) ==================
+    function triggerBadEnding(pelaku) {
+        const namaSalah = pelaku === 'Tatang' ? 'Bapak Tatang' : 'Nyonya Rina';
+        playError();
+        playHorrorDrone();
+        document.getElementById('badend-overlay').style.display = 'flex';
+        speakCreepy(`Kau salah lagi, Detektif ${namaDetektifAsli}... Sekarang giliranmu...`);
+        prologTypeWriter(
+            `Tuduhanmu kepada ${namaSalah} runtuh untuk kedua kalinya di hadapan bukti yang ada. Seluruh lampu kereta padam total. Dalam gelap, kamu mendengar decit lantai logam mendekat, pelan namun pasti. Kertas Sandi Kotak di tas buktimu terasa mendadak dingin, seolah menertawakan kesalahanmu sendiri. Detektif ${namaDetektifAsli} tidak pernah turun di stasiun berikutnya.`,
+            'badend-text',
+            () => { document.getElementById('badend-restart-btn').style.display = 'inline-block'; }
+        );
     }
 </script>
 
