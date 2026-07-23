@@ -109,7 +109,9 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; color: #fff; z-index: 100; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
+            overflow-y: auto; padding: 20px; box-sizing: border-box;
         }
+        #prolog-overlay > div, #nightmare-overlay > div { max-width: 700px; width: 100%; box-sizing: border-box; }
         
         /* EFEK TELEPON */
         @keyframes ringBlink { 0% { background-color: #000; } 50% { background-color: var(--blood-red); } 100% { background-color: #000; } }
@@ -133,9 +135,86 @@
         #prolog-overlay, #nightmare-overlay, #badend-overlay { z-index: 200; }
         @keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; } 20%,24%,55% { opacity: 0.4; } }
         .flicker-title { animation: flicker 3s infinite; }
+
+        /* ================== RESPONSIVE MOBILE ================== */
+        @media (max-width: 767px) {
+            body { padding: 8px; }
+            .vintage-container { border-width: 3px; }
+            .arsip-header { font-size: 0.95rem; padding: 10px; letter-spacing: 1px; }
+
+            #game-area { padding: 14px; border-right: none; border-bottom: 4px solid var(--border-color); min-height: auto; }
+            #tools-area { padding: 14px; }
+
+            #dialogue-box { font-size: 0.95rem; min-height: 90px; padding: 12px; }
+            .action-btn { font-size: 0.85rem; padding: 10px; }
+
+            /* elemen yang tadinya lebar tetap w-50 jadi penuh di layar kecil */
+            #inputNamaDetektif, .input-group.w-50, #pilihanPelaku, #inputWaktu, #inputLuas,
+            .action-btn.w-50, .action-btn.w-auto { width: 100% !important; }
+
+            .input-group.w-50 { flex-wrap: nowrap; }
+
+            #notepad { height: 160px; font-size: 0.85rem; }
+            .calculator { padding: 10px; }
+            .calc-btn { padding: 8px 0; font-size: 0.9rem; }
+
+            .sandi-container { gap: 8px; }
+            .sk { width: 22px; height: 22px; }
+
+            #prolog-text, #nightmare-text, #badend-text { font-size: 0.95rem !important; line-height: 1.6 !important; }
+            #prolog-overlay h3, #nightmare-overlay h3 { font-size: 1rem; }
+            #badend-overlay h1 { font-size: 1.6rem !important; }
+
+            .foto-tkp svg { max-width: 100% !important; }
+
+            #inventory-bar { font-size: 0.8rem; padding: 8px; }
+            .item { display: inline-block; margin-bottom: 4px; }
+
+            .sertifikat { padding: 18px; }
+            .sertifikat h1 { font-size: 1.4rem; }
+            .sertifikat h2 { font-size: 1.2rem; }
+            .stamp { position: static; display: inline-block; margin-top: 15px; transform: rotate(-8deg); }
+
+            #phone-overlay h1 { font-size: 2rem !important; margin-bottom: 15px !important; }
+            #phone-overlay p { font-size: 0.9rem; }
+            #phone-overlay button { font-size: 1.1rem !important; padding: 12px 24px !important; }
+        }
+
+        /* ================== EFEK AMBIENT HOROR ================== */
+        @keyframes screenFlash {
+            0% { background-color: rgba(139,0,0,0); }
+            10% { background-color: rgba(139,0,0,0.85); }
+            20% { background-color: rgba(0,0,0,0.9); }
+            30% { background-color: rgba(139,0,0,0.6); }
+            100% { background-color: rgba(139,0,0,0); }
+        }
+        #flash-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            pointer-events: none; z-index: 500; opacity: 0;
+        }
+        #flash-overlay.active { animation: screenFlash 0.5s ease-out; }
+
+        @keyframes tremor {
+            0%,100% { transform: translate(0,0); }
+            25% { transform: translate(-2px, 1px); }
+            50% { transform: translate(2px, -1px); }
+            75% { transform: translate(-1px, -2px); }
+        }
+        .vintage-container.tremor { animation: tremor 0.25s linear 3; }
+
+        #whisper-hint {
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            color: var(--blood-red); font-family: 'Courier New', monospace; font-size: 0.85rem;
+            opacity: 0; z-index: 501; pointer-events: none; letter-spacing: 2px;
+        }
+        #whisper-hint.show { animation: whisperFade 2.5s ease-in-out; }
+        @keyframes whisperFade { 0% { opacity:0; } 20% { opacity:0.9; } 80% { opacity:0.9; } 100% { opacity:0; } }
     </style>
 </head>
 <body>
+
+<div id="flash-overlay"></div>
+<div id="whisper-hint"></div>
 
 <div class="container-fluid">
     <div class="vintage-container">
@@ -197,23 +276,43 @@
 
                 <div id="scene-tkp" class="scene">
                     <div class="foto-tkp">
-                        <pre>
-       ,-.
-      ( X )  <- Luka benda tumpul
-       `-'
-      / | \
-     /  |  \
-    '   |   ` 
-       / \   
-      /   \  
-     /     \ 
-                        </pre>
+                        <svg viewBox="0 0 400 190" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:480px; height:auto;">
+                            <!-- noda darah di lantai -->
+                            <ellipse cx="55" cy="128" rx="42" ry="18" fill="#8b0000" opacity="0.45"></ellipse>
+                            <circle cx="18" cy="110" r="6" fill="#8b0000" opacity="0.4"></circle>
+                            <circle cx="95" cy="145" r="5" fill="#8b0000" opacity="0.35"></circle>
+                            <circle cx="30" cy="150" r="4" fill="#8b0000" opacity="0.3"></circle>
+
+                            <!-- garis kapur outline tubuh korban -->
+                            <g fill="none" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="62" cy="88" r="26"></circle>
+                                <path d="M86,78 L215,58 L226,112 L92,124 Z"></path>
+                                <path d="M215,58 L278,18"></path>
+                                <path d="M278,18 L308,34"></path>
+                                <path d="M92,124 L62,152"></path>
+                                <path d="M226,112 L298,140"></path>
+                                <path d="M298,140 L360,118"></path>
+                                <path d="M92,124 L112,164"></path>
+                                <path d="M112,164 L142,184"></path>
+                            </g>
+
+                            <!-- tanda X di titik luka -->
+                            <g stroke="#8b0000" stroke-width="3.5" stroke-linecap="round">
+                                <line x1="138" y1="76" x2="160" y2="98"></line>
+                                <line x1="160" y1="76" x2="138" y2="98"></line>
+                            </g>
+
+                            <!-- garis nomor label bukti ala TKP -->
+                            <text x="150" y="30" fill="#8b0000" font-family="Courier New, monospace" font-size="14" font-weight="bold">BUKTI #1 — TITIK LUKA</text>
+                        </svg>
                         <span style="font-size: 0.85em; font-weight: bold; border-top: 1px solid black; display:inline-block; margin-top:10px; padding-top:5px;">SKETSA TKP: POSISI JATUH KORBAN</span>
                     </div>
 
+                    <button class="action-btn" id="btn-luka" onclick="amatiPolaLuka()">> Amati Pola Luka Lebih Dekat</button>
+
                     <button class="action-btn" id="btn-mayat" onclick="periksaMayat()">> Geledah Saku Jas Korban</button>
                     <button class="action-btn" id="btn-koper" onclick="periksaKoper()">> Periksa Koper Baja di Sudut Ruangan</button>
-                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Berada di dekat tubuh korban membuatmu merinding. Kamu kembali ke lorong.')">> Mundur ke Lorong</button>
+                    <button class="action-btn mt-3" onclick="kembaliKoridor()">> Mundur ke Lorong</button>
                 </div>
 
                 <div id="scene-koper" class="scene">
@@ -256,7 +355,7 @@
                             <button class="action-btn danger w-auto mt-2" id="btn-ambil-bukti" onclick="ambilBarang('Log Sensor & Sandi Kotak', 'btn-ambil-bukti')">> Unduh Log & Ambil Kertas</button>
                         </div>
                     </div>
-                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Keluar dari ruang kondektur yang pengap.')">> Tutup Pintu Ruangan</button>
+                    <button class="action-btn mt-3" onclick="kembaliKoridor()">> Tutup Pintu Ruangan</button>
                 </div>
 
                 <div id="scene-saksi" class="scene">
@@ -264,7 +363,7 @@
                         <button class="action-btn" onclick="mulaiInterogasi('Tatang')">> Interogasi Bapak Tatang (Pedagang)</button>
                         <button class="action-btn" onclick="mulaiInterogasi('Rina')">> Interogasi Nyonya Rina (Sosialita)</button>
                         <button class="action-btn" onclick="mulaiInterogasi('Bima')">> Interogasi Kondektur Bima</button>
-                        <button class="action-btn mt-3" onclick="changeScene('koridor', 'Kamu kembali ke lorong.')">> Akhiri Interogasi Sementara</button>
+                        <button class="action-btn mt-3" onclick="kembaliKoridor()">> Akhiri Interogasi Sementara</button>
                     </div>
                     <div id="pertanyaan-saksi" style="display:none; border-left: 3px solid var(--border-color); padding-left: 15px;"></div>
                 </div>
@@ -423,6 +522,50 @@
         osc.start(); osc.stop(audioCtx.currentTime + 0.5);
     }
 
+    // Bisikan pakai white-noise di-bandpass biar kedengaran kayak desis/bisikan, bukan nada bersih
+    function playWhisper() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const bufferSize = audioCtx.sampleRate * 1.2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) { data[i] = (Math.random() * 2 - 1) * 0.6; }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        const bandpass = audioCtx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.setValueAtTime(1200, audioCtx.currentTime);
+        bandpass.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 1.1);
+        bandpass.Q.value = 0.8;
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.14, audioCtx.currentTime + 0.25);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.2);
+        noise.connect(bandpass); bandpass.connect(gain); gain.connect(audioCtx.destination);
+        noise.start(); noise.stop(audioCtx.currentTime + 1.2);
+    }
+
+    // Stinger jumpscare: gabungan noise tajam + nada sumbang, jauh lebih "nge-jump" dari drone biasa
+    function playJumpscareStinger() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const osc3 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(120, audioCtx.currentTime);
+        osc1.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 0.45);
+        osc2.type = 'square';
+        osc2.frequency.setValueAtTime(660, audioCtx.currentTime);
+        osc3.type = 'sawtooth';
+        osc3.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc3.detune.setValueAtTime(40, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+        osc1.connect(gain); osc2.connect(gain); osc3.connect(gain); gain.connect(audioCtx.destination);
+        osc1.start(); osc2.start(); osc3.start();
+        osc1.stop(audioCtx.currentTime + 0.6); osc2.stop(audioCtx.currentTime + 0.6); osc3.stop(audioCtx.currentTime + 0.6);
+    }
+
     // CALCULATOR LOGIC
     const calcScreen = document.getElementById('calc-screen');
     function calc(val) { calcScreen.value += val; }
@@ -488,6 +631,7 @@
         } else {
             document.getElementById('prolog-overlay').style.display = 'none';
             changeScene('koridor', `Selamat bertugas, Detektif ${namaDetektifAsli}. Kereta KA Pangrango terus melaju menembus malam yang pekat. Seorang teknisi telah dihabisi. Pembunuhnya sangat terorganisir. Tetap waspada.`);
+            mulaiAmbientHoror();
         }
     }
 
@@ -576,6 +720,13 @@
     function lanjutDariNightmare() {
         document.getElementById('nightmare-overlay').style.display = 'none';
         changeScene('tkp', 'Kamu menggeser pintu Gerbong Eksekutif. Hawa dingin menyergap. Teknisi tewas dengan posisi janggal.');
+    }
+
+    function amatiPolaLuka() {
+        typeWriter("Sudut luka benda tumpul mengarah dari atas ke bawah, cukup curam. Pelakunya kemungkinan bertubuh tinggi dan terlatih menggunakan benda berat dengan satu ayunan cepat — bukan gerakan panik orang awam.");
+        document.getElementById('btn-luka').disabled = true;
+        document.getElementById('btn-luka').innerHTML = "Pola Luka Sudah Dianalisis";
+        playType();
     }
 
     function periksaMayat() {
@@ -679,6 +830,54 @@
 
     function bicara(nama, teks) { typeWriter(`[Transkrip - ${nama}]: "${teks}"`); }
 
+    // ================== AMBIENT HOROR ACAK & VARIASI LORONG ==================
+    const lorongTeks = [
+        "Berada di dekat tubuh korban membuatmu merinding. Kamu kembali ke lorong.",
+        "Lorong kereta terasa lebih sempit dari sebelumnya. Kamu menghela napas dan melangkah mundur.",
+        "Kamu menutup pintu pelan-pelan, seakan takut membangunkan sesuatu yang tertidur di baliknya.",
+        "Roda kereta berdecit di rel basah. Kamu kembali melangkah menyusuri lorong utama.",
+        "Sesaat kamu merasa ada yang mengawasi dari balik jendela gelap. Kamu bergegas kembali ke lorong."
+    ];
+
+    function kembaliKoridor() {
+        const teks = lorongTeks[Math.floor(Math.random() * lorongTeks.length)];
+        changeScene('koridor', teks);
+    }
+
+    const bisikanTeks = [
+        "...jangan menoleh ke belakang...",
+        "...dia sedang mengawasimu...",
+        "...waktumu tidak banyak, Detektif...",
+        "...jangan percaya semua alibi...",
+        "...dia tahu namamu..."
+    ];
+
+    function pemicuHororSekilas() {
+        const flash = document.getElementById('flash-overlay');
+        const box = document.querySelector('.vintage-container');
+        flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active');
+        box.classList.remove('tremor'); void box.offsetWidth; box.classList.add('tremor');
+        playJumpscareStinger();
+    }
+
+    function bisikanAcak() {
+        playWhisper();
+        const el = document.getElementById('whisper-hint');
+        el.textContent = bisikanTeks[Math.floor(Math.random() * bisikanTeks.length)];
+        el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+    }
+
+    let ambientInterval;
+    function mulaiAmbientHoror() {
+        clearInterval(ambientInterval);
+        ambientInterval = setInterval(() => {
+            if (state.kasusSelesai) { clearInterval(ambientInterval); return; }
+            const roll = Math.random();
+            if (roll < 0.55) { bisikanAcak(); }
+            else if (roll < 0.85) { pemicuHororSekilas(); }
+        }, 20000 + Math.random() * 15000);
+    }
+
     function galiLebihDalam(nama) {
         let teks = '';
         if (nama === 'Tatang') {
@@ -704,6 +903,7 @@
             playError(); typeWriter("Tetapkan satu target yang valid.");
         } else if (pelaku === "Bima") {
             playSuccess();
+            state.kasusSelesai = true;
             
             // Sembunyikan form tuduhan, tampilkan sertifikat
             document.getElementById('form-tuduhan').style.display = 'none';
@@ -730,23 +930,36 @@
             } else {
                 playError();
                 playHorrorDrone();
-                typeWriter("PENANGKAPAN GAGAL. Tersangka yang kamu pilih memiliki alibi logis. Tiba-tiba lampu kereta padam... dan kamu merasakan sentuhan dingin di lehermu... (Pikirkan lagi baik-baik, satu kesalahan lagi bisa berakibat fatal.)");
+                let gagalTeks = '';
+                if (pelaku === 'Tatang') {
+                    gagalTeks = "PENANGKAPAN GAGAL. Bapak Tatang menunjukkan cap tangan pedagang yang kapalan, tidak sesuai dengan sudut ayunan di titik luka. Alibinya kuat. Tiba-tiba lampu kereta padam sesaat... dan kamu merasakan sentuhan dingin di lehermu...";
+                } else if (pelaku === 'Rina') {
+                    gagalTeks = "PENANGKAPAN GAGAL. Nyonya Rina bersikeras menunjukkan cap waktu di buku bacaannya yang sesuai jam kejadian. Bukti tidak cukup kuat. Tiba-tiba lampu kereta padam sesaat... dan kamu merasakan sentuhan dingin di lehermu...";
+                }
+                typeWriter(gagalTeks + " (Pikirkan lagi baik-baik, satu kesalahan lagi bisa berakibat fatal.)");
             }
         }
     }
 
     // ================== ENDING GAGAL (SALAH TUDUH 2X) ==================
     function triggerBadEnding(pelaku) {
+        state.kasusSelesai = true;
         const namaSalah = pelaku === 'Tatang' ? 'Bapak Tatang' : 'Nyonya Rina';
         playError();
         playHorrorDrone();
         document.getElementById('badend-overlay').style.display = 'flex';
         speakCreepy(`Kau salah lagi, Detektif ${namaDetektifAsli}... Sekarang giliranmu...`);
-        prologTypeWriter(
-            `Tuduhanmu kepada ${namaSalah} runtuh untuk kedua kalinya di hadapan bukti yang ada. Seluruh lampu kereta padam total. Dalam gelap, kamu mendengar decit lantai logam mendekat, pelan namun pasti. Kertas Sandi Kotak di tas buktimu terasa mendadak dingin, seolah menertawakan kesalahanmu sendiri. Detektif ${namaDetektifAsli} tidak pernah turun di stasiun berikutnya.`,
-            'badend-text',
-            () => { document.getElementById('badend-restart-btn').style.display = 'inline-block'; }
-        );
+
+        let cerita = '';
+        if (pelaku === 'Tatang') {
+            cerita = `Tuduhanmu kepada ${namaSalah} runtuh untuk kedua kalinya — tangannya yang kapalan sama sekali tak cocok dengan sudut ayunan di titik luka. Sementara kamu sibuk membela argumenmu yang keliru, seluruh lampu kereta padam total. Dalam gelap, kamu mendengar decit lantai logam mendekat dari arah Gerbong 3, pelan namun pasti. Detektif ${namaDetektifAsli} tidak pernah turun di stasiun berikutnya.`;
+        } else {
+            cerita = `Tuduhanmu kepada ${namaSalah} runtuh untuk kedua kalinya — catatan waktunya konsisten dengan log GAPEKA yang sudah kamu unduh sendiri. Sementara kamu tergagap mencari alasan, seluruh lampu kereta padam total. Dalam gelap, kamu mendengar decit lantai logam mendekat dari arah Gerbong 3, pelan namun pasti. Detektif ${namaDetektifAsli} tidak pernah turun di stasiun berikutnya.`;
+        }
+
+        prologTypeWriter(cerita, 'badend-text', () => {
+            document.getElementById('badend-restart-btn').style.display = 'inline-block';
+        });
     }
 </script>
 
