@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Situs Resmi Pemerintah Kabupaten Sukamundur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            /* Background khas FrontPage tahun 2000an */
+            background-color: #008080;
+            background-image: radial-gradient(#005050 1px, transparent 1px);
+            background-size: 10px 10px;
+            font-family: "Times New Roman", Times, serif;
+            cursor: default;
+        }
+
+        /* Teks berkedip legendaris */
+        .blink-text {
+            animation: blinker 1s linear infinite;
+            color: red;
+            font-weight: bold;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
+        /* Gaya tabel jadul */
+        .jadul-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .jadul-table th, .jadul-table td {
+            border: 2px solid #000080;
+            padding: 5px;
+        }
+
+        /* Efek 3D pada tombol dan kotak */
+        .outset-border {
+            border: 3px outset #dddddd;
+            background-color: #c0c0c0;
+        }
+        .inset-border {
+            border: 3px inset #dddddd;
+            background-color: #ffffff;
+        }
+
+        /* Marquee manual dengan CSS */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            background-color: #ffff00;
+            color: #000000;
+            border: 2px solid #000080;
+            padding: 2px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+        
+        a {
+            color: #0000FF;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        a:visited {
+            color: #800080;
+        }
+        a:hover {
+            color: #FF0000;
+        }
+
+        /* Modal Popup Jadul */
+        .window-modal {
+            background-color: #c0c0c0;
+            border: 3px outset #ffffff;
+            box-shadow: 4px 4px 0px #000000;
+        }
+        .window-header {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: white;
+            font-family: sans-serif;
+            font-weight: bold;
+            padding: 2px 6px;
+        }
+
+        /* Sparkle trail particle */
+        .star-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 12px;
+            z-index: 9999;
+            animation: fadeOut 1s forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(20px) scale(0.2); }
+        }
+    </style>
+</head>
+<body class="p-2 md:p-4 text-sm md:text-base select-none">
+
+    <div class="max-w-5xl mx-auto bg-gray-100 outset-border">
+        
+        <!-- TOP CONTROL BAR (Sound Control & Retro Status) -->
+        <div class="bg-[#c0c0c0] border-b-2 border-gray-600 px-2 py-1 flex justify-between items-center text-xs font-sans">
+            <div class="flex items-center gap-2">
+                <button id="bgm-btn" onclick="toggleBGM()" class="outset-border px-2 py-0.5 font-bold hover:bg-gray-300 active:border-inset">
+                    🔊 Turn MIDI BGM: <span id="bgm-status" class="text-red-700">OFF</span>
+                </button>
+                <span class="hidden sm:inline italic text-gray-700">Best Experience with Sound ON!</span>
+            </div>
+            <div class="text-right">
+                <span class="bg-yellow-300 px-1 border border-black font-bold">STATUS: SERVER ONLINE</span>
+            </div>
+        </div>
+
+        <!-- HEADER -->
+        <header class="bg-[#000080] text-white p-4 flex flex-col md:flex-row items-center justify-between border-b-4 border-yellow-400">
+            <div class="flex items-center gap-4 mb-2 md:mb-0">
+                <img src="https://placehold.co/80x100/ffd700/000080?text=LOGO+KAB" alt="Logo Kabupaten" class="border-2 border-white">
+                <div class="text-center md:text-left">
+                    <h1 class="text-2xl md:text-4xl font-bold tracking-wider drop-shadow-md" style="text-shadow: 2px 2px #000;">PEMERINTAH KABUPATEN SUKAMUNDUR</h1>
+                    <h2 class="text-lg md:text-xl text-yellow-300 font-bold">PROVINSI JAYA SELALU</h2>
+                    <p class="text-xs italic">"Maju Terus, Pantang Mundur, Walau Sedikit Hancur"</p>
+                </div>
+            </div>
+            <div class="hidden md:block text-center">
+                <img src="https://placehold.co/60x40/ff0000/ffffff?text=MERDEKA" alt="Bendera" class="border border-white mx-auto mb-1">
+                <span class="text-[10px] text-yellow-200 font-sans block">NKRI HARGA MATI!</span>
+            </div>
+        </header>
+
+        <!-- MARQUEE (RUNNING TEXT) -->
+        <div class="marquee-container">
+            <marquee behavior="scroll" direction="left" scrollamount="5" id="main-marquee">
+                *** SELAMAT DATANG DI SITUS RESMI PEMERINTAH KABUPATEN SUKAMUNDUR *** MARI KITA SUKSESKAN PROGRAM WAJIB BELAJAR 9 TAHUN *** HATI-HATI TERHADAP PENIPUAN CALON PEGAWAI NEGERI SIPIL (CPNS) TAHUN INI *** WEBSITE INI SEDANG DALAM TAHAP PENGEMBANGAN DAN UJI COBA ***
+            </marquee>
+        </div>
+
+        <!-- MAIN LAYOUT (3 COLUMNS) -->
+        <div class="flex flex-col md:flex-row p-2 gap-2">
+            
+            <!-- KIRI: MENU NAVIGASI -->
+            <aside class="w-full md:w-1/4 bg-[#c0c0c0] inset-border p-2">
+                <h3 class="bg-[#000080] text-white text-center font-bold py-1 border border-[#000080] mb-2 font-sans text-xs md:text-sm">MENU UTAMA</h3>
+                <ul class="space-y-1 font-sans text-xs md:text-sm font-bold bg-[#000080] p-1">
+                    <li><button onclick="switchTab('beranda')" class="w-full text-left bg-yellow-300 px-2 py-1 border border-white hover:bg-yellow-400 text-[#000080]">&gt;&nbsp;&nbsp;Beranda</button></li>
+                    <li><button onclick="switchTab('profil')" class="w-full text-left bg-yellow-300 px-2 py-1 border border-white hover:bg-yellow-400 text-[#000080]">&gt;&nbsp;&nbsp;Profil Daerah</button></li>
+                    <li><button onclick="switchTab('visimisi')" class="w-full text-left bg-yellow-300 px-2 py-1 border border-white hover:bg-yellow-400 text-[#000080]">&gt;&nbsp;&nbsp;Visi dan Misi</button></li>
+                    <li><button onclick="switchTab('organisasi')" class="w-full text-left bg-yellow-300 px-2 py-1 border border-white hover:bg-yellow-400 text-[#000080]">&gt;&nbsp;&nbsp;Struktur Organisasi</button></li>
+                    <li><button onclick="switchTab('galeri')" class="w-full text-left bg-yellow-300 px-2 py-1 border border-white hover:bg-yellow-400 text-[#000080]">&gt;&nbsp;&nbsp;Galeri Foto</button></li>
+                    <li><button onclick="switchTab('bukutamu')" class="w-full text-left bg-yellow-300 px-2 py-1 border border-white hover:bg-yellow-400 text-[#000080] flex justify-between items-center">&gt;&nbsp;&nbsp;Buku Tamu <span class="blink-text text-red-600 text-[10px]">NEW!</span></button></li>
+                </ul>
+
+                <h3 class="bg-[#000080] text-white text-center font-bold py-1 border border-[#000080] mt-4 mb-2 font-sans text-xs md:text-sm">LINK TERKAIT</h3>
+                <ul class="space-y-1 text-xs md:text-sm list-disc pl-5">
+                    <li><a onclick="showPopupAlert('Navigasi Ke BAPPEDA: Layanan Eksternal Sedang Maintenance Server')">BAPPEDA Sukamundur</a></li>
+                    <li><a onclick="showPopupAlert('Navigasi Ke Dinas Pendidikan: Dial-Up Connection Timed Out')">Dinas Pendidikan</a></li>
+                    <li><a onclick="showPopupAlert('Navigasi Ke Dinas Kesehatan: Layanan Offline sementara')">Dinas Kesehatan</a></li>
+                    <li><a onclick="showPopupAlert('Situs Portal Nasional www.ri.go.id dapat diakses via IE 5+')">Portal Nasional RI</a></li>
+                </ul>
+
+                <div class="mt-4 p-2 bg-yellow-100 border border-black text-xs font-sans">
+                    <p class="font-bold text-red-700 underline mb-1">PENGUMUMAN CPNS:</p>
+                    <p class="text-[11px]">Pengambilan formulir CPNS dibuka di Kantor BKD tiap jam kerja membawa pasfoto 3x4 (4 lembar).</p>
+                </div>
+            </aside>
+
+            <!-- TENGAH: KONTEN UTAMA (MULTI-PAGE SYSTEM) -->
+            <main class="w-full md:w-2/4 bg-white inset-border p-3 md:p-4 min-h-[450px]">
+                
+                <!-- TAB 1: BERANDA -->
+                <div id="page-beranda" class="tab-page">
+                    <h2 class="text-xl font-bold text-center text-[#000080] mb-4 border-b-2 border-red-500 pb-2">KATA SAMBUTAN BUPATI</h2>
+                    
+                    <div class="float-left mr-4 mb-2 text-center">
+                        <img src="https://placehold.co/120x150/000080/ffffff?text=FOTO+BUPATI" alt="Foto Bupati" class="border-4 border-[#000080] p-1 shadow-md">
+                        <p class="text-xs font-bold mt-1">Drs. H. Fulan bin Fulan</p>
+                        <p class="text-[10px] text-gray-600 italic">Bupati Sukamundur</p>
+                    </div>
+                    
+                    <p class="text-justify mb-3">
+                        <em>Assalamu'alaikum Wr. Wb.</em>
+                    </p>
+                    <p class="text-justify mb-3 leading-relaxed">
+                        Puji syukur ke hadirat Tuhan Yang Maha Esa atas berkat dan rahmat-Nya sehingga pembuatan <b>Website Resmi Pemerintah Kabupaten Sukamundur</b> ini dapat diselesaikan. Di era globalisasi dan informasi milenium ketiga ini, kehadiran teknologi internet sangatlah krusial untuk menunjang transparansi dan e-Government.
+                    </p>
+                    <p class="text-justify mb-3 leading-relaxed">
+                        Situs ini masih berstatus <span class="blink-text font-sans">Under Construction</span>, namun kami berharap informasi yang disajikan dapat bermanfaat bagi masyarakat luas maupun para investor yang ingin menanamkan modalnya di daerah kami yang tercinta ini.
+                    </p>
+                    <p class="text-justify mb-4">
+                        <em>Wassalamu'alaikum Wr. Wb.</em>
+                    </p>
+                    
+                    <div class="clear-both"></div>
+                    <hr size="3" color="#000080" class="my-4">
+
+                    <!-- Berita Terbaru Searchable -->
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-lg font-bold text-[#000080]"><span class="blink-text text-red-600">»</span> BERITA TERKINI</h2>
+                        <input type="text" id="news-search" oninput="filterNews()" placeholder="Cari berita..." class="border border-black text-xs p-1 font-sans w-32 md:w-40">
+                    </div>
+
+                    <table class="jadul-table mb-2 text-xs md:text-sm">
+                        <thead>
+                            <tr class="bg-[#c0c0c0] font-bold text-center">
+                                <th width="25%">Tanggal</th>
+                                <th width="75%">Judul Berita</th>
+                            </tr>
+                        </thead>
+                        <tbody id="news-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TAB 2: PROFIL DAERAH -->
+                <div id="page-profil" class="tab-page hidden">
+                    <h2 class="text-xl font-bold text-center text-[#000080] mb-4 border-b-2 border-red-500 pb-2">PROFIL KABUPATEN SUKAMUNDUR</h2>
+                    <p class="mb-3 text-justify">Kabupaten Sukamundur disahkan berdasarkan Undang-Undang Nomor 99 Tahun 1999. Luas wilayah Kabupaten Sukamundur adalah sebesar 1.234,56 km² yang terdiri dari 12 Kecamatan dan 108 Desa.</p>
+                    
+                    <h3 class="font-bold text-[#000080] mt-4 mb-1">Batas Wilayah:</h3>
+                    <ul class="list-disc pl-6 mb-4 space-y-1">
+                        <li><b>Utara:</b> Kabupaten Maju Terus</li>
+                        <li><b>Selatan:</b> Laut Selatan Jawa</li>
+                        <li><b>Timur:</b> Kabupaten Makmur Jaya</li>
+                        <li><b>Barat:</b> Selat Penuh Karang</li>
+                    </ul>
+
+                    <h3 class="font-bold text-[#000080] mt-4 mb-1">Sektor Unggulan:</h3>
+                    <p class="text-justify">Komoditas utama daerah mencakup Hasil Pertanian Padi, Perkebunan Kelapa Sawit, serta Kerajinan Anyaman Bambu Tradisional yang telah diekspor ke mancanegara.</p>
+                </div>
+
+                <!-- TAB 3: VISI & MISI -->
+                <div id="page-visimisi" class="tab-page hidden">
+                    <h2 class="text-xl font-bold text-center text-[#000080] mb-4 border-b-2 border-red-500 pb-2">VISI DAN MISI DAERAH</h2>
+                    
+                    <div class="bg-yellow-100 p-3 border-2 border-yellow-600 mb-4">
+                        <h3 class="font-bold text-center text-[#000080] text-lg mb-1">VISI:</h3>
+                        <p class="text-center italic font-bold">"Terwujudnya Masyarakat Sukamundur yang Mandiri, Sejahtera, Bertaqwa, dan Bebas Beban Dial-Up Internet pada Tahun 2010"</p>
+                    </div>
+
+                    <h3 class="font-bold text-[#000080] text-lg mb-2">MISI:</h3>
+                    <ol class="list-decimal pl-6 space-y-2 text-justify">
+                        <li>Meningkatkan kualitas Sumber Daya Manusia (SDM) melalui Program Wajib Belajar 9 Tahun.</li>
+                        <li>Membangun infrastruktur jalan berbatu menjadi aspal di seluruh wilayah kecamatan.</li>
+                        <li>Pengadaan komputer PC Pentium IV di seluruh dinas dan instansi terkait.</li>
+                        <li>Mengembangkan potensi pariwisata daerah dan usaha mikro kecil menengah.</li>
+                    </ol>
+                </div>
+
+                <!-- TAB 4: STRUKTUR ORGANISASI -->
+                <div id="page-organisasi" class="tab-page hidden">
+                    <h2 class="text-xl font-bold text-center text-[#000080] mb-4 border-b-2 border-red-500 pb-2">STRUKTUR ORGANISASI</h2>
+                    <div class="text-center my-4 overflow-x-auto">
+                        <div class="inline-block border-2 border-black p-2 bg-gray-200">
+                            <div class="bg-blue-900 text-white font-bold p-2 text-sm border border-black mb-2">BUPATI SUKAMUNDUR<br><span class="font-normal text-xs">Drs. H. Fulan bin Fulan</span></div>
+                            <div class="w-0.5 h-4 bg-black mx-auto"></div>
+                            <div class="bg-blue-800 text-white font-bold p-2 text-xs border border-black mb-2">SEKRETARIS DAERAH<br><span class="font-normal text-xs">Ir. Ahmad Syafei, M.Si</span></div>
+                            <div class="w-0.5 h-4 bg-black mx-auto"></div>
+                            <div class="flex gap-2 justify-center text-[11px]">
+                                <div class="bg-yellow-200 p-2 border border-black font-bold">ASISTEN I<br>(Pemerintahan)</div>
+                                <div class="bg-yellow-200 p-2 border border-black font-bold">ASISTEN II<br>(Pembangunan)</div>
+                                <div class="bg-yellow-200 p-2 border border-black font-bold">ASISTEN III<br>(Kesejahteraan)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: GALERI FOTO -->
+                <div id="page-galeri" class="tab-page hidden">
+                    <h2 class="text-xl font-bold text-center text-[#000080] mb-4 border-b-2 border-red-500 pb-2">GALERI FOTO KEGIATAN</h2>
+                    <p class="text-xs italic text-center mb-4 text-gray-700">*Klik foto untuk memperbesar tampilan</p>
+                    
+                    <div class="grid grid-cols-2 gap-3" id="gallery-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- TAB 6: BUKU TAMU (BERFUNGSI IN REAL TIME) -->
+                <div id="page-bukutamu" class="tab-page hidden">
+                    <h2 class="text-xl font-bold text-center text-[#000080] mb-2 border-b-2 border-red-500 pb-2">BUKU TAMU DIGITAL</h2>
+                    <p class="text-xs mb-3 text-center">Silakan tinggalkan pesan/kesan Anda untuk kemajuan Pemkab Sukamundur.</p>
+
+                    <form id="guestbook-form" onsubmit="submitGuestbook(event)" class="bg-[#c0c0c0] p-3 border-2 border-gray-600 mb-4 font-sans text-xs space-y-2">
+                        <div>
+                            <label class="block font-bold mb-1">Nama Lengkap:</label>
+                            <input type="text" id="gb-name" required class="w-full border border-black p-1">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">Asal Kota / Instansi:</label>
+                            <input type="text" id="gb-origin" required class="w-full border border-black p-1">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1">Pesan / Masukan:</label>
+                            <textarea id="gb-message" required rows="2" class="w-full border border-black p-1"></textarea>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="outset-border px-3 py-1 font-bold hover:bg-gray-300 active:border-inset">KIRIM PESAN</button>
+                        </div>
+                    </form>
+
+                    <h3 class="font-bold text-[#000080] border-b border-gray-400 mb-2">Daftar Pengunjung Terbaru:</h3>
+                    <div id="guestbook-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        <!-- Guestbook entries populated via JS -->
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- KANAN: WIDGET (JAM, COUNTER, POLLING INTERAKTIF) -->
+            <aside class="w-full md:w-1/4 bg-[#e6e6fa] inset-border p-2">
+                <!-- Widget Jam -->
+                <div class="border-2 border-[#000080] bg-[#000000] text-[#00ff00] text-center p-2 mb-4 font-mono font-bold shadow-inner">
+                    <div id="hari-tanggal" class="text-[11px] text-yellow-300"></div>
+                    <div id="jam-digital" class="text-xl">00:00:00</div>
+                </div>
+
+                <!-- Hit Counter Aktif -->
+                <h3 class="bg-[#000080] text-white text-center font-bold py-1 mb-2 font-sans text-xs md:text-sm">STATISTIK PENGUNJUNG</h3>
+                <div class="text-center mb-4">
+                    <p class="text-xs mb-1">Anda adalah pengunjung ke:</p>
+                    <div class="inline-flex border-2 border-gray-600 bg-black p-1" id="hit-counter">
+                        <!-- Counter digits loaded by JS -->
+                    </div>
+                    <p class="text-[10px] text-gray-600 mt-1">IP Anda: 192.168.1.102 (Recorded)</p>
+                </div>
+
+                <!-- Polling Berfungsi -->
+                <h3 class="bg-[#000080] text-white text-center font-bold py-1 mb-2 font-sans text-xs md:text-sm">JAJAK PENDAPAT</h3>
+                <div class="bg-[#c0c0c0] p-2 border border-gray-500 text-xs font-sans">
+                    <p class="mb-2 font-bold text-center">Bagaimana kinerja & tampilan e-Gov Sukamundur?</p>
+                    
+                    <form id="poll-form" onsubmit="submitPoll(event)">
+                        <label class="block mb-1 cursor-pointer"><input type="radio" name="polling" value="sangat_bagus" checked> Sangat Canggih</label>
+                        <label class="block mb-1 cursor-pointer"><input type="radio" name="polling" value="bagus"> Cukup Bagus</label>
+                        <label class="block mb-1 cursor-pointer"><input type="radio" name="polling" value="lambat"> Koneksi Agak Lambat</label>
+                        <div class="text-center mt-2">
+                            <button type="submit" class="outset-border px-3 py-1 font-bold active:border-inset hover:bg-gray-300">VOTE NOW</button>
+                        </div>
+                    </form>
+
+                    <!-- Hasil Poll -->
+                    <div id="poll-results" class="hidden mt-3 pt-2 border-t border-gray-600">
+                        <p class="font-bold text-center mb-1 text-[11px]">Hasil Sementara:</p>
+                        <div class="space-y-1 text-[10px]">
+                            <div>
+                                <span>Sangat Canggih: </span><span id="count-sangat_bagus">0</span>
+                                <div class="w-full bg-gray-300 h-2 border border-black"><div id="bar-sangat_bagus" class="bg-green-600 h-full" style="width: 0%"></div></div>
+                            </div>
+                            <div>
+                                <span>Cukup Bagus: </span><span id="count-bagus">0</span>
+                                <div class="w-full bg-gray-300 h-2 border border-black"><div id="bar-bagus" class="bg-blue-600 h-full" style="width: 0%"></div></div>
+                            </div>
+                            <div>
+                                <span>Koneksi Lambat: </span><span id="count-lambat">0</span>
+                                <div class="w-full bg-gray-300 h-2 border border-black"><div id="bar-lambat" class="bg-red-600 h-full" style="width: 0%"></div></div>
+                            </div>
+                        </div>
+                        <p class="text-[9px] text-center text-green-800 font-bold mt-2">✓ Suara Anda telah disimpan!</p>
+                    </div>
+                </div>
+                
+                <!-- Under Construction GIF Fake & Banner IE -->
+                <div class="mt-4 text-center space-y-2">
+                    <div class="border-2 border-yellow-500 bg-yellow-200 text-black font-bold text-xs p-1">
+                        <span class="text-xl">🚧</span><br>
+                        UNDER CONSTRUCTION
+                    </div>
+                    <div class="bg-white border border-black p-1 text-[10px]">
+                        <span>GET INTERNET EXPLORER 6.0</span>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="bg-[#000080] text-white text-center p-3 text-xs md:text-sm mt-2 border-t-4 border-yellow-400">
+            <p>Hak Cipta &copy; 2004 - Pemkab Sukamundur. All Rights Reserved.</p>
+            <p>Diselenggarakan oleh: Bagian PDE (Pengolahan Data Elektronik)</p>
+            <p class="mt-2 text-yellow-300 text-[10px] font-sans">
+                Best viewed with Internet Explorer 6.0 or Netscape Navigator at 800x600 resolution.
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- RETRO POPUP MODAL -->
+    <div id="retro-modal" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center p-4 z-50">
+        <div class="window-modal w-full max-w-sm">
+            <div class="window-header flex justify-between items-center">
+                <span id="modal-title">Pesan Sistem</span>
+                <button onclick="closeModal()" class="bg-gray-300 text-black px-1 font-bold border border-black text-xs hover:bg-red-500 hover:text-white">X</button>
+            </div>
+            <div class="p-4 font-sans text-xs">
+                <p id="modal-text" class="mb-4">Pesan dialog sistem...</p>
+                <div class="text-center">
+                    <button onclick="closeModal()" class="outset-border px-4 py-1 font-bold hover:bg-gray-300 active:border-inset">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* === DATA MODEL BERITA & GALERI === */
+        const newsData = [
+            { date: "23 Jul 2026", title: "Peresmian Balai Desa Harapan Makmur oleh Bapak Bupati.", content: "Bapak Bupati meresmikan gedung baru balai desa dengan pemotongan tumpeng dan pentas wayang kulit semalam suntuk." },
+            { date: "21 Jul 2026", title: "Pengumuman Hasil Seleksi Administrasi CPNS Daerah Gelombang II.", content: "Peserta yang dinyatakan lolos wajib mendaftar ulang di kantor BKD dengan membawa berkas kartu ujian fisik." },
+            { date: "15 Jul 2026", title: "Himbauan Waspada Penyakit Demam Berdarah (DBD) di Musim Hujan.", content: "Dinas Kesehatan menghimbau warga untuk rajin melakukan gerakan 3M (Menguras, Menutup, Menimbun) barang bekas." },
+            { date: "10 Jul 2026", title: "Kunjungan Kerja Staf Ahli Kementrian Dalam Negeri.", content: "Rombongan pusat memuji kerapihan tata kelola arsip manual dan implementasi komputerisasi di kantor Pemkab." }
+        ];
+
+        const galleryData = [
+            { title: "Rapat Paripurna DPRD", img: "https://placehold.co/300x200/000080/ffffff?text=Rapat+DPRD" },
+            { title: "Upacara Bendera 17 Agustus", img: "https://placehold.co/300x200/800000/ffffff?text=Upacara+17an" },
+            { title: "Inspeksi Pasar Tradisional", img: "https://placehold.co/300x200/008000/ffffff?text=Inspeksi+Pasar" },
+            { title: "Lomba Senam Kesegaran Jasmani", img: "https://placehold.co/300x200/800080/ffffff?text=Lomba+SKJ" }
+        ];
+
+        /* === INITIALIZATION ON LOAD === */
+        window.onload = function() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            scrollTitle();
+            initHitCounter();
+            renderNewsTable(newsData);
+            renderGallery();
+            loadGuestbook();
+            initPollData();
+        };
+
+        /* === 1. NAVIGATION TAB SYSTEM === */
+        function switchTab(tabId) {
+            const pages = document.querySelectorAll('.tab-page');
+            pages.forEach(p => p.classList.add('hidden'));
+            
+            const targetPage = document.getElementById('page-' + tabId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+            playBeepSound();
+        }
+
+        /* === 2. CLOCK & TITLE SCROLLER === */
+        function updateClock() {
+            const now = new Date();
+            const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            document.getElementById('hari-tanggal').innerText = `${hari[now.getDay()]}, ${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()}`;
+            
+            let h = now.getHours().toString().padStart(2, '0');
+            let m = now.getMinutes().toString().padStart(2, '0');
+            let s = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('jam-digital').innerText = `${h}:${m}:${s}`;
+        }
+
+        let msg = "  Selamat Datang di Portal Resmi Pemerintah Kabupaten Sukamundur...  ";
+        let pos = 0;
+        function scrollTitle() {
+            document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
+            pos++;
+            if (pos > msg.length) pos = 0;
+            window.setTimeout(scrollTitle, 250);
+        }
+
+        /* === 3. HIT COUNTER WITH LOCAL STORAGE === */
+        function initHitCounter() {
+            let count = localStorage.getItem('sukamundur_hit_count');
+            if (!count) {
+                count = 14209;
+            } else {
+                count = parseInt(count) + 1;
+            }
+            localStorage.setItem('sukamundur_hit_count', count);
+
+            const countStr = count.toString().padStart(6, '0');
+            const counterEl = document.getElementById('hit-counter');
+            counterEl.innerHTML = '';
+            
+            for (let i = 0; i < countStr.length; i++) {
+                const span = document.createElement('span');
+                span.className = "text-red-500 font-mono text-lg bg-black px-1 border-r border-gray-800 font-bold";
+                span.innerText = countStr[i];
+                counterEl.appendChild(span);
+            }
+        }
+
+        /* === 4. SEARCHABLE NEWS SYSTEM === */
+        function renderNewsTable(data) {
+            const tbody = document.getElementById('news-table-body');
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" class="text-center italic py-2">Berita tidak ditemukan...</td></tr>`;
+                return;
+            }
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td align="center" class="font-mono text-xs">${item.date}</td>
+                    <td><a onclick="showNewsDetail('${item.title}', '${item.content}')">${item.title}</a></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterNews() {
+            const query = document.getElementById('news-search').value.toLowerCase();
+            const filtered = newsData.filter(n => n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query));
+            renderNewsTable(filtered);
+        }
+
+        function showNewsDetail(title, content) {
+            showPopupAlert(`<b>${title}</b><br><br>${content}`);
+        }
+
+        /* === 5. GALLERY SYSTEM === */
+        function renderGallery() {
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = '';
+            galleryData.forEach(g => {
+                const div = document.createElement('div');
+                div.className = "bg-gray-200 border-2 border-gray-600 p-1 text-center cursor-pointer hover:bg-yellow-100";
+                div.onclick = function() {
+                    showPopupAlert(`<img src="${g.img}" class="w-full border border-black mb-2"><p class="font-bold text-center">${g.title}</p>`);
+                };
+                div.innerHTML = `
+                    <img src="${g.img}" alt="${g.title}" class="w-full h-24 object-cover border border-black mb-1">
+                    <p class="text-xs font-bold font-sans truncate">${g.title}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        /* === 6. INTERACTIVE GUESTBOOK SYSTEM === */
+        function loadGuestbook() {
+            let entries = JSON.parse(localStorage.getItem('sukamundur_guestbook') || '[]');
+            if (entries.length === 0) {
+                // Default mock entries
+                entries = [
+                    { name: "Budi Santoso", origin: "Kecamatan Kota", msg: "Web-nya sangat informatif pak bupati! Sukses terus untuk Kabupaten Sukamundur." },
+                    { name: "Siti Rahma", origin: "Dinas Pendidikan", msg: "Semoga pelayanan informasi publik semakin cepat dan akurat." }
+                ];
+                localStorage.setItem('sukamundur_guestbook', JSON.stringify(entries));
+            }
+            renderGuestbookList(entries);
+        }
+
+        function renderGuestbookList(entries) {
+            const listEl = document.getElementById('guestbook-list');
+            listEl.innerHTML = '';
+            entries.forEach(e => {
+                const div = document.createElement('div');
+                div.className = "bg-yellow-50 p-2 border border-black text-xs font-sans";
+                div.innerHTML = `
+                    <p class="font-bold text-[#000080] border-b border-gray-300 pb-1 mb-1">
+                        👤 ${escapeHtml(e.name)} <span class="text-gray-600 font-normal">(${escapeHtml(e.origin)})</span>
+                    </p>
+                    <p class="italic text-gray-800">"${escapeHtml(e.msg)}"</p>
+                `;
+                listEl.appendChild(div);
+            });
+        }
+
+        function submitGuestbook(e) {
+            e.preventDefault();
+            const name = document.getElementById('gb-name').value;
+            const origin = document.getElementById('gb-origin').value;
+            const msg = document.getElementById('gb-message').value;
+
+            let entries = JSON.parse(localStorage.getItem('sukamundur_guestbook') || '[]');
+            entries.unshift({ name, origin, msg });
+            localStorage.setItem('sukamundur_guestbook', JSON.stringify(entries));
+
+            renderGuestbookList(entries);
+            document.getElementById('guestbook-form').reset();
+            showPopupAlert("Terima kasih! Pesan Anda telah berhasil dipublikasikan di Buku Tamu.");
+        }
+
+        /* === 7. REAL-TIME POLLING SYSTEM === */
+        let pollData = { sangat_bagus: 42, bagus: 18, lambat: 5 };
+
+        function initPollData() {
+            const saved = localStorage.getItem('sukamundur_poll_data');
+            if (saved) {
+                pollData = JSON.parse(saved);
+            }
+            updatePollUI();
+        }
+
+        function submitPoll(e) {
+            e.preventDefault();
+            const selected = document.querySelector('input[name="polling"]:checked').value;
+            pollData[selected]++;
+            localStorage.setItem('sukamundur_poll_data', JSON.stringify(pollData));
+            
+            updatePollUI();
+            document.getElementById('poll-form').classList.add('hidden');
+            document.getElementById('poll-results').classList.remove('hidden');
+            playBeepSound();
+        }
+
+        function updatePollUI() {
+            const total = pollData.sangat_bagus + pollData.bagus + pollData.lambat;
+            
+            ['sangat_bagus', 'bagus', 'lambat'].forEach(key => {
+                const count = pollData[key];
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                document.getElementById('count-' + key).innerText = `${count} (${pct}%)`;
+                document.getElementById('bar-' + key).style.width = pct + '%';
+            });
+        }
+
+        /* === 8. RETRO SYSTEM MODAL === */
+        function showPopupAlert(msgText) {
+            document.getElementById('modal-text').innerHTML = msgText;
+            document.getElementById('retro-modal').classList.remove('hidden');
+            playBeepSound();
+        }
+
+        function closeModal() {
+            document.getElementById('retro-modal').classList.add('hidden');
+        }
+
+        /* === 9. BGM SOUND ENGINE (WEB AUDIO SYNTHESIS - NO EXTERNAL FILE) === */
+        let audioCtx = null;
+        let isBgmPlaying = false;
+        let bgmTimer = null;
+
+        function toggleBGM() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (isBgmPlaying) {
+                stopBGM();
+            } else {
+                startBGM();
+            }
+        }
+
+        function startBGM() {
+            isBgmPlaying = true;
+            document.getElementById('bgm-status').innerText = "ON 🎶";
+            document.getElementById('bgm-status').className = "text-green-700 font-bold";
+            
+            // Simple 8-bit Retro Melody Loop
+            const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+            let noteIdx = 0;
+
+            bgmTimer = setInterval(() => {
+                if (!isBgmPlaying) return;
+                playTone(notes[noteIdx % notes.length], 0.15, 'square');
+                noteIdx++;
+            }, 300);
+        }
+
+        function stopBGM() {
+            isBgmPlaying = false;
+            clearInterval(bgmTimer);
+            document.getElementById('bgm-status').innerText = "OFF";
+            document.getElementById('bgm-status').className = "text-red-700 font-bold";
+        }
+
+        function playTone(freq, duration, type = 'sine') {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (err) {}
+        }
+
+        function playBeepSound() {
+            playTone(800, 0.05, 'square');
+        }
+
+        /* === 10. SPARKLE CURSOR TRAIL === */
+        document.addEventListener('mousemove', function(e) {
+            if (Math.random() < 0.15) { // Limit star density
+                const star = document.createElement('div');
+                star.className = 'star-particle';
+                star.innerText = ['★', '✨', '✦', '✳'][Math.floor(Math.random() * 4)];
+                star.style.left = e.clientX + 'px';
+                star.style.top = e.clientY + 'px';
+                star.style.color = ['#ffff00', '#ff0000', '#00ffff', '#ffffff'][Math.floor(Math.random() * 4)];
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 1000);
+            }
+        });
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>

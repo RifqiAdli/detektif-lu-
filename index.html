@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip Rahasia: KA Pangrango (Investigasi Lanjutan)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* TEMA VINTAGE JADUL & HOROR */
+        :root {
+            --paper-color: #dcd3b6;
+            --paper-dark: #b8ac84;
+            --ink-color: #1a1a1a;
+            --border-color: #3d3522;
+            --blood-red: #660000;
+            --terminal-bg: #001100;
+            --terminal-fg: #00ff00;
+        }
+        body {
+            background-color: #050505;
+            color: var(--ink-color);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+        }
+        .vintage-container {
+            background-color: var(--paper-color);
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            border: 4px solid var(--border-color);
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.9);
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .arsip-header {
+            background-color: var(--border-color);
+            color: var(--paper-color);
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            border-bottom: 4px solid var(--ink-color);
+        }
+
+        /* AREA PERMAINAN (KIRI) */
+        #game-area {
+            padding: 20px;
+            border-right: 4px solid var(--border-color);
+            min-height: 85vh;
+        }
+        #dialogue-box {
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 2px dashed var(--border-color);
+            padding: 15px;
+            min-height: 120px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+        .action-btn {
+            background-color: var(--ink-color);
+            color: var(--paper-color);
+            border: 2px solid var(--ink-color);
+            padding: 10px 15px;
+            margin: 5px 0;
+            width: 100%;
+            text-align: left;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+        .action-btn:hover { background-color: transparent; color: var(--ink-color); }
+        .action-btn:disabled { background-color: var(--paper-dark); color: var(--border-color); border-color: var(--border-color); cursor: not-allowed; }
+        .action-btn.danger { background-color: var(--blood-red); border-color: var(--blood-red); color: white; text-align: center; }
+        .action-btn.danger:hover { background-color: white; color: var(--blood-red); }
+        .action-btn.terminal-btn { background-color: var(--terminal-fg); color: var(--terminal-bg); border-color: var(--terminal-fg); text-align: center; }
+
+        /* AREA ALAT DETEKTIF (KANAN) */
+        #tools-area { padding: 20px; background-color: #e5deb0; }
+        .tool-title { font-weight: bold; border-bottom: 2px solid var(--border-color); margin-bottom: 10px; text-transform: uppercase; }
+        
+        #notepad {
+            width: 100%; height: 250px; background-color: #f9f5d7;
+            border: 2px solid var(--border-color); padding: 10px;
+            font-family: 'Courier New', Courier, monospace; font-weight: bold;
+            color: #000080; resize: none; line-height: 1.5;
+            background-image: repeating-linear-gradient(transparent, transparent 23px, #ccc 24px);
+        }
+
+        .calculator { background-color: #222; padding: 15px; border-radius: 5px; border: 3px solid #111; }
+        #calc-screen {
+            width: 100%; background-color: #8da388; color: #111;
+            font-family: 'Courier New', Courier, monospace; font-size: 1.5rem;
+            text-align: right; padding: 5px 10px; border: 2px inset #555; margin-bottom: 10px;
+        }
+        .calc-btn { background-color: #bbb; border: 2px solid #888; font-weight: bold; width: 100%; padding: 10px 0; margin-bottom: 5px; cursor: pointer; }
+        .calc-btn:active { background-color: #999; }
+        .calc-btn.op { background-color: #d19a3b; color: white; }
+        .calc-btn.clear { background-color: #a33b3b; color: white; }
+
+        #inventory-bar {
+            background-color: var(--border-color); color: var(--paper-color);
+            padding: 10px; border-top: 4px solid var(--ink-color); font-weight: bold;
+        }
+        .item { background-color: var(--paper-color); color: var(--ink-color); padding: 2px 8px; margin-right: 5px; }
+
+        /* SANDI KOTAK CSS (B-I-M-A) */
+        .sandi-container { display: flex; gap: 15px; margin: 15px 0; justify-content: center; }
+        .sk { width: 30px; height: 30px; position: relative; }
+        .sk::after { position: absolute; font-size: 20px; color: var(--blood-red); top: -10px; left: 8px; font-weight: bold;}
+        .sk-b { border-right: 4px solid var(--ink-color); border-bottom: 4px solid var(--ink-color); }
+        .sk-b::after { content: '.'; }
+        .sk-i { border: 4px solid var(--ink-color); }
+        .sk-m { border-top: 4px solid var(--ink-color); border-right: 4px solid var(--ink-color); }
+        .sk-a { border-right: 4px solid var(--ink-color); border-bottom: 4px solid var(--ink-color); }
+
+        .scene { display: none; }
+        .scene.active { display: block; }
+        
+        .clue-text { font-style: italic; color: var(--blood-red); border-left: 3px solid var(--blood-red); padding-left: 10px; }
+        
+        #terminal-screen {
+            background-color: var(--terminal-bg); color: var(--terminal-fg);
+            padding: 15px; border: 3px solid #333; font-family: monospace;
+        }
+        #terminal-screen input { background: transparent; color: var(--terminal-fg); border: 1px solid var(--terminal-fg); outline: none; padding: 5px; }
+
+        #start-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; color: #fff; z-index: 10; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="vintage-container">
+        
+        <div id="start-overlay">
+            <h2 style="border-bottom: 2px solid var(--blood-red); padding-bottom:10px;">ARSIP #99: MALAM PANJANG DI KA PANGRANGO</h2>
+            <p>Kasus ini membutuhkan kesabaran, penalaran logika (GAPEKA & Geometri), dan keberanian.<br>Siapkan Buku Catatanmu.</p>
+            <button class="action-btn w-auto px-5 mt-3 danger" onclick="startGame()">BUKA ARSIP KASUS</button>
+        </div>
+
+        <div class="arsip-header">Biro Investigasi Independen - Kasus KA Pangrango</div>
+        
+        <div class="row g-0">
+            <!-- GAME AREA -->
+            <div class="col-md-8" id="game-area">
+                <div id="dialogue-box"><span id="typewriter">Memuat data...</span></div>
+
+                <!-- SCENE: LORONG -->
+                <div id="scene-koridor" class="scene">
+                    <button class="action-btn" onclick="changeScene('tkp', 'Kamu masuk ke Gerbong Eksekutif yang dingin. Tuan Arya (Teknisi) tewas di lantai. Ada koper besar miliknya.')">> 1. Periksa TKP (Gerbong Eksekutif)</button>
+                    <button class="action-btn" onclick="cekRuangKondektur()">> 2. Periksa Ruang Kondektur (Terminal Komputer)</button>
+                    <button class="action-btn" onclick="changeScene('saksi', 'Kamu menuju Kereta Makan. Dua penumpang dan satu Kondektur sedang berkumpul ketakutan.')">> 3. Interogasi Saksi (Kereta Makan)</button>
+                    <button class="action-btn danger mt-4" id="btn-tuduh" style="display:none;" onclick="changeScene('akhir', 'Waktunya menyimpulkan rentetan petunjuk ini.')">> KELUARKAN SURAT PENAHANAN</button>
+                </div>
+
+                <!-- SCENE: TKP -->
+                <div id="scene-tkp" class="scene">
+                    <button class="action-btn" id="btn-mayat" onclick="periksaMayat()">> Periksa Tubuh Korban</button>
+                    <button class="action-btn" id="btn-koper" onclick="periksaKoper()">> Periksa Koper Teknisi (Butuh PIN Luas)</button>
+                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Kembali ke lorong kereta.')">> Kembali ke Lorong</button>
+                </div>
+
+                <!-- SCENE: KOPER (GEOMETRI) -->
+                <div id="scene-koper" class="scene">
+                    <p>Koper ini memiliki gembok 3 digit. Tertulis pesan dari korban:</p>
+                    <div class="clue-text mb-3">
+                        "Sandiku adalah LUAS lantai kabinku (dalam $m^2$) DIKALI DUA.<br>
+                        Catatan dimensi kabin: Panjang diagonal dari sudut ke sudut adalah <strong>13 meter</strong>. Lebar kabin adalah <strong>5 meter</strong>."
+                    </div>
+                    <p style="font-size: 0.85em;">(Gunakan Kalkulator Detektif: Cari Panjang dengan rumus Pythagoras, kalikan dengan Lebar untuk mendapat Luas, lalu Kalikan 2).</p>
+                    <div class="input-group mb-3 w-50">
+                        <input type="number" id="inputLuas" class="form-control" placeholder="3 Digit PIN...">
+                        <button class="btn btn-dark" onclick="bukaKoper()">Buka</button>
+                    </div>
+                    <div id="koper-terbuka" style="display: none; padding: 15px; border: 2px solid var(--border-color); background: rgba(0,0,0,0.05);">
+                        <p><strong>*KLIK!*</strong> Koper terbuka. Kamu menemukan <strong>Kartu GAPEKA</strong> (Grafik Perjalanan Kereta Api) yang robek.</p>
+                        <button class="action-btn" id="btn-ambil-gapeka" onclick="ambilBarang('Kartu GAPEKA', 'btn-ambil-gapeka')">> Ambil Kartu GAPEKA</button>
+                    </div>
+                    <button class="action-btn mt-3" onclick="changeScene('tkp', 'Mundur dari koper.')">> Mundur</button>
+                </div>
+
+                <!-- SCENE: RUANG KONDEKTUR (GAPEKA & TERMINAL) -->
+                <div id="scene-kondektur" class="scene">
+                    <div id="terminal-screen">
+                        <p><strong>SISTEM MANIFES & LOG KAI - TERKUNCI</strong></p>
+                        <p>Masukkan 4 digit Waktu (Format HHMM) berdasarkan Kartu GAPEKA Teknisi untuk mengakses Log Keamanan.</p>
+                        <div class="clue-text mb-3" style="color:var(--terminal-fg); border-color:var(--terminal-fg);">
+                            "KA Pangrango berangkat dari Paledang pukul <strong>22:00</strong> dengan kecepatan konstan <strong>60 km/jam</strong>. Sistem mendeteksi anomali tepat saat kereta melewati Sinyal Masuk <strong>KM 45</strong>. Pukul berapakah itu?"
+                        </div>
+                        <input type="number" id="inputWaktu" placeholder="HHMM (Misal: 2315)">
+                        <button class="action-btn terminal-btn d-inline w-auto" onclick="bukaTerminal()">[ RETAS TERMINAL ]</button>
+                        
+                        <div id="terminal-terbuka" style="display: none; margin-top: 15px; border-top: 1px dashed var(--terminal-fg); padding-top: 10px;">
+                            <p><strong>AKSES DITERIMA.</strong> Memuat Log Sensor...</p>
+                            <p><em>> SENSOR GERBONG 3: Terkunci otomatis sejak pukul 21:00 akibat malfungsi. Tidak ada satupun yang masuk atau keluar dari Gerbong 3 sejak saat itu.</em></p>
+                            <p>Selain itu, laci terminal terbuka otomatis. Di dalamnya terdapat <strong>Buku Sandi Kotak</strong> dan robekan kertas berlumuran darah membentuk pola:</p>
+                            <div class="sandi-container bg-light p-2">
+                                <div class="sk sk-b"></div>
+                                <div class="sk sk-i"></div>
+                                <div class="sk sk-m"></div>
+                                <div class="sk sk-a"></div>
+                            </div>
+                            <button class="action-btn danger w-auto mt-2" id="btn-ambil-bukti" onclick="ambilBarang('Log Sensor & Sandi Kotak', 'btn-ambil-bukti')">> Simpan Bukti Kritis</button>
+                        </div>
+                    </div>
+                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Keluar dari ruang kondektur.')">> Keluar Ruangan</button>
+                </div>
+
+                <!-- SCENE: SAKSI -->
+                <div id="scene-saksi" class="scene">
+                    <button class="action-btn" onclick="bicara('Bapak Tatang', 'Saya pedagang. Saya tidur pulas di Gerbong Ekonomi 1! Saya tidak tahu apa-apa!')">> Interogasi Bapak Tatang</button>
+                    <button class="action-btn" onclick="bicara('Nyonya Rina', 'Jangan tuduh saya! Saya berada di kabin Eksekutif 1 saya membaca buku sejak jam 21:30!')">> Interogasi Nyonya Rina</button>
+                    <button class="action-btn" onclick="bicara('Kondektur Bima', 'Saya sibuk bertugas! Tepat pada jam 22:30 (waktu kejadian), saya sedang berpatroli ke dalam Gerbong 3. Saya bisa memastikannya!')">> Interogasi Kondektur Bima</button>
+                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Seseorang dari mereka berbohong. Kamu kembali ke lorong.')">> Kembali ke Lorong</button>
+                </div>
+
+                <!-- SCENE: AKHIR -->
+                <div id="scene-akhir" class="scene">
+                    <p>Semua kepingan teka-teki sudah terkumpul.</p>
+                    <ul class="mb-3">
+                        <li>Siapa yang memiliki <strong>Alibi Palsu</strong> berdasarkan Log Terminal?</li>
+                        <li>Siapa yang namanya dieja oleh <strong>Sandi Kotak Berdarah</strong>?</li>
+                    </ul>
+                    <select id="pilihanPelaku" class="form-select mb-3 w-50 border-dark rounded-0">
+                        <option value="">-- Pilih Tersangka Utama --</option>
+                        <option value="Tatang">Bapak Tatang (Pedagang)</option>
+                        <option value="Rina">Nyonya Rina (Penumpang VVIP)</option>
+                        <option value="Bima">Kondektur Bima</option>
+                    </select>
+                    <button class="action-btn danger" onclick="tangkapPelaku()">TANGKAP PELAKU</button>
+                </div>
+            </div>
+
+            <!-- TOOLS AREA -->
+            <div class="col-md-4" id="tools-area">
+                <div class="mb-4">
+                    <div class="tool-title">Buku Catatan Saku</div>
+                    <textarea id="notepad" placeholder="- Catat rumus Pythagoras di sini...&#10;- Catat rumus Waktu (Jarak/Kecepatan)...&#10;- Catat alibi para saksi..."></textarea>
+                </div>
+
+                <div>
+                    <div class="tool-title">Kalkulator Fisika & Geometri</div>
+                    <div class="calculator">
+                        <input type="text" id="calc-screen" readonly>
+                        <div class="row g-1">
+                            <div class="col-3"><button class="calc-btn" onclick="calc('7')">7</button></div>
+                            <div class="col-3"><button class="calc-btn" onclick="calc('8')">8</button></div>
+                            <div class="col-3"><button class="calc-btn" onclick="calc('9')">9</button></div>
+                            <div class="col-3"><button class="calc-btn op" onclick="calc('+')">+</button></div>
+                            
+                            <div class="col-3"><button class="calc-btn" onclick="calc('4')">4</button></div>
+                            <div class="col-3"><button class="calc-btn" onclick="calc('5')">5</button></div>
+                            <div class="col-3"><button class="calc-btn" onclick="calc('6')">6</button></div>
+                            <div class="col-3"><button class="calc-btn op" onclick="calc('-')">-</button></div>
+                            
+                            <div class="col-3"><button class="calc-btn" onclick="calc('1')">1</button></div>
+                            <div class="col-3"><button class="calc-btn" onclick="calc('2')">2</button></div>
+                            <div class="col-3"><button class="calc-btn" onclick="calc('3')">3</button></div>
+                            <div class="col-3"><button class="calc-btn op" onclick="calc('*')">×</button></div>
+                            
+                            <div class="col-3"><button class="calc-btn clear" onclick="calcClear()">C</button></div>
+                            <div class="col-3"><button class="calc-btn" onclick="calc('0')">0</button></div>
+                            <div class="col-3"><button class="calc-btn op" style="background-color: #28a745;" onclick="calcEval()">=</button></div>
+                            <div class="col-3"><button class="calc-btn op" onclick="calc('/')">÷</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="inventory-bar">
+            Tas Bukti (Harus Lengkap untuk Menuduh): <span id="inventory-list">KOSONG</span>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playType() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(150 + Math.random() * 50, audioCtx.currentTime); 
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.015);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.02);
+    }
+
+    function playGhost() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(120, audioCtx.currentTime); 
+        osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 2); 
+        osc.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 5); 
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 2); 
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 5); 
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 5);
+    }
+
+    function playSuccess() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+    }
+
+    function playError() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(70, audioCtx.currentTime); 
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.5);
+    }
+
+    // CALCULATOR LOGIC
+    const calcScreen = document.getElementById('calc-screen');
+    function calc(val) { calcScreen.value += val; }
+    function calcClear() { calcScreen.value = ''; }
+    function calcEval() {
+        try {
+            if(calcScreen.value !== "") {
+                calcScreen.value = Function('"use strict";return (' + calcScreen.value + ')')();
+            }
+        } catch(e) {
+            calcScreen.value = 'ERR';
+            setTimeout(calcClear, 1000);
+        }
+    }
+
+    // GAME STATE
+    let state = { inventory: [], koperBuka: false, terminalBuka: false, punyaKunciKondektur: false };
+    let typingTimer;
+
+    function startGame() {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        document.getElementById('start-overlay').style.display = 'none';
+        playGhost(); 
+        changeScene('koridor', 'Malam semakin larut. Kereta KA Pangrango menembus badai. Pembunuh itu sangat cerdas, meninggalkan petunjuk matematika dan memalsukan log. Kamu harus lebih cerdas darinya.');
+    }
+
+    function typeWriter(text) {
+        const el = document.getElementById('typewriter');
+        el.innerHTML = '';
+        let i = 0;
+        clearInterval(typingTimer);
+        
+        typingTimer = setInterval(() => {
+            if (i < text.length) {
+                el.innerHTML += text.charAt(i);
+                if(i % 2 === 0) playType(); 
+                i++;
+            } else {
+                clearInterval(typingTimer);
+            }
+        }, 35); 
+    }
+
+    function changeScene(sceneId, narasi) {
+        document.querySelectorAll('.scene').forEach(el => el.classList.remove('active'));
+        document.getElementById(`scene-${sceneId}`).classList.add('active');
+        typeWriter(narasi);
+        if(Math.random() < 0.15) setTimeout(() => playGhost(), 800); 
+        cekProgres();
+    }
+
+    function updateInventory() {
+        const list = document.getElementById('inventory-list');
+        if (state.inventory.length === 0) { list.innerHTML = 'KOSONG'; } 
+        else { list.innerHTML = state.inventory.map(item => `<span class="item">[${item}]</span>`).join(''); }
+    }
+
+    function ambilBarang(namaBarang, btnId) {
+        if (!state.inventory.includes(namaBarang)) {
+            state.inventory.push(namaBarang);
+            updateInventory();
+            playSuccess();
+            document.getElementById(btnId).disabled = true;
+            document.getElementById(btnId).innerHTML = "Disimpan";
+            typeWriter(`Item [${namaBarang}] dimasukkan ke Tas Bukti.`);
+            cekProgres();
+        }
+    }
+
+    function periksaMayat() {
+        typeWriter("Kamu menggeledah saku korban dan menemukan sebuah Kunci Magnetik berlabel 'RUANG KONDEKTUR'.");
+        state.punyaKunciKondektur = true;
+        document.getElementById('btn-mayat').disabled = true;
+        document.getElementById('btn-mayat').innerHTML = "Kunci Kondektur Diambil";
+        playSuccess();
+    }
+
+    function periksaKoper() {
+        if (state.koperBuka) { changeScene('koper', 'Koper ini sudah tidak terkunci.'); } 
+        else { changeScene('koper', 'Analisis Geometri diperlukan. Hitung dengan hati-hati.'); }
+    }
+
+    // Logic Koper: Diagonal 13, Lebar 5. Panjang = akar(13^2 - 5^2) = akar(169-25) = akar(144) = 12. 
+    // Luas = 12 * 5 = 60. PIN (Luas dikali 2) = 120.
+    function bukaKoper() {
+        const kode = document.getElementById('inputLuas').value;
+        if (kode === "120") {
+            state.koperBuka = true;
+            playSuccess();
+            typeWriter("Analisis geometrimu sempurna! Koper terbuka.");
+            document.getElementById('inputLuas').disabled = true;
+            document.getElementById('koper-terbuka').style.display = 'block';
+        } else {
+            playError();
+            typeWriter("Sandi salah. (Cari Panjang sisi menggunakan Phytagoras. Kuadratkan Diagonal (13x13) kurangi Kuadrat Lebar (5x5), lalu cari akarnya. Hasilnya kalikan Lebar, lalu kalikan 2!)");
+        }
+    }
+
+    function cekRuangKondektur() {
+        if(state.punyaKunciKondektur) {
+            changeScene('kondektur', 'Kunci magnetik berfungsi. Kamu masuk ke ruang kondektur yang ditinggalkan. Terdapat layar terminal komputer menyala berkedip hijau.');
+        } else {
+            playError();
+            typeWriter("Pintu Ruang Kondektur terkunci rapat. Kamu butuh Kunci Akses (Cari di sekitar tubuh korban).");
+        }
+    }
+
+    // Logic Waktu: 45km / 60km/jam = 0.75 jam = 45 menit. Berangkat 22:00 + 45 menit = 22:45. PIN = 2245.
+    function bukaTerminal() {
+        const kode = document.getElementById('inputWaktu').value;
+        if (kode === "2245") {
+            state.terminalBuka = true;
+            playSuccess();
+            typeWriter("Sistem Berhasil Diretas! Kalkulasi GAPEKA (Fisika Jarak/Kecepatan) milikmu tepat sasaran.");
+            document.getElementById('inputWaktu').disabled = true;
+            document.getElementById('terminal-terbuka').style.display = 'block';
+        } else {
+            playError();
+            typeWriter("Sistem Menolak: Waktu tidak valid. (Gunakan rumus Waktu = Jarak dibagi Kecepatan. Jarak 45 dibagi Kecepatan 60 = 0.75 Jam = 45 Menit. Tambahkan ke jam berangkat!)");
+        }
+    }
+
+    function bicara(nama, teks) { typeWriter(`Transkrip: [${nama}] "${teks}"`); }
+
+    function cekProgres() {
+        // Harus ambil Gapeka dan Bukti Akhir (Log + Sandi) untuk bisa menuduh.
+        if (state.inventory.includes('Kartu GAPEKA') && state.inventory.includes('Log Sensor & Sandi Kotak')) {
+            document.getElementById('btn-tuduh').style.display = 'block';
+        }
+    }
+
+    function tangkapPelaku() {
+        const pelaku = document.getElementById('pilihanPelaku').value;
+
+        if (pelaku === "") {
+            playError(); typeWriter("Pilih satu target!");
+        } else if (pelaku === "Bima") {
+            playGhost();
+            document.getElementById('game-area').innerHTML = `
+                <div class="text-center mt-4">
+                    <h2 style="color:var(--blood-red); font-weight:bold; border-bottom: 2px solid var(--blood-red); display:inline-block;">KASUS DITUTUP DENGAN GEMILANG</h2>
+                    <p class="mt-4"><strong>Kamu memecahkan rentetan teka-teki tersulit malam ini!</strong></p>
+                    <p style="text-align:left;">
+                    1. <strong>Geometri:</strong> Dengan tenang, kamu menghitung teorema Pythagoras ($l = \\sqrt{13^2 - 5^2} = \\sqrt{144} = 12$) lalu menemukan Luas $60$ dan memasukkan PIN $120$.<br><br>
+                    2. <strong>Logika GAPEKA:</strong> Kamu menganalisis rute kereta, membagi $45$ km dengan $60$ km/jam ($0.75$ jam = $45$ menit), meretas terminal pada sandi waktu $2245$.<br><br>
+                    3. <strong>Analisis Bukti:</strong> Kondektur Bima berbohong sedang berada di Gerbong 3 pada jam 22:30, padahal Terminal membuktikan gerbong itu rusak dan terkunci rapat sejak jam 21:00.<br><br>
+                    4. <strong>Kriptografi:</strong> Sandi Kotak tersebut dengan sempurna mengeja <strong>B-I-M-A</strong>. Dialah monster sesungguhnya yang meretas kereta ini!
+                    </p>
+                    <button class="action-btn text-center mt-3 w-50" onclick="location.reload()">Selesaikan Bertugas</button>
+                </div>
+            `;
+        } else {
+            playError();
+            typeWriter("TUDUHAN SALAH! Log Terminal membuktikan orang itu jujur. Pembunuh aslinya baru saja melompat keluar dari kereta dan melarikan diri menembus malam...");
+        }
+    }
+</script>
+
+</body>
+</html>
