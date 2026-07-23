@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arsip Rahasia: KA Pangrango (Investigasi Lanjutan)</title>
+    <title>Arsip Investigasi Khusus: KA Pangrango</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* TEMA VINTAGE JADUL & HOROR */
@@ -124,9 +124,26 @@
         
         #terminal-screen {
             background-color: var(--terminal-bg); color: var(--terminal-fg);
-            padding: 15px; border: 3px solid #333; font-family: monospace;
+            padding: 15px; border: 3px solid #333; font-family: monospace; margin-bottom: 15px;
         }
         #terminal-screen input { background: transparent; color: var(--terminal-fg); border: 1px solid var(--terminal-fg); outline: none; padding: 5px; }
+
+        /* SKETSA TKP */
+        .foto-tkp {
+            border: 2px solid var(--ink-color);
+            background-color: rgba(0,0,0,0.05);
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .foto-tkp pre {
+            color: var(--ink-color);
+            font-size: 14px;
+            line-height: 14px;
+            font-weight: bold;
+            margin: 0;
+            padding: 10px;
+        }
 
         #start-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -142,100 +159,120 @@
         
         <div id="start-overlay">
             <h2 style="border-bottom: 2px solid var(--blood-red); padding-bottom:10px;">ARSIP #99: MALAM PANJANG DI KA PANGRANGO</h2>
-            <p>Kasus ini membutuhkan kesabaran, penalaran logika (GAPEKA & Geometri), dan keberanian.<br>Siapkan Buku Catatanmu.</p>
-            <button class="action-btn w-auto px-5 mt-3 danger" onclick="startGame()">BUKA ARSIP KASUS</button>
+            <p>Buktikan deduksimu, Detektif. Tidak ada ruang untuk kesalahan perhitungan.</p>
+            <button class="action-btn w-auto px-5 mt-3 danger" onclick="startGame()">MULAI PENYELIDIKAN</button>
         </div>
 
-        <div class="arsip-header">Biro Investigasi Independen - Kasus KA Pangrango</div>
+        <div class="arsip-header">Biro Investigasi Independen - Log Kematian Teknisi</div>
         
         <div class="row g-0">
             <!-- GAME AREA -->
             <div class="col-md-8" id="game-area">
-                <div id="dialogue-box"><span id="typewriter">Memuat data...</span></div>
+                <div id="dialogue-box"><span id="typewriter">Memuat data lingkungan...</span></div>
 
                 <!-- SCENE: LORONG -->
                 <div id="scene-koridor" class="scene">
-                    <button class="action-btn" onclick="changeScene('tkp', 'Kamu masuk ke Gerbong Eksekutif yang dingin. Tuan Arya (Teknisi) tewas di lantai. Ada koper besar miliknya.')">> 1. Periksa TKP (Gerbong Eksekutif)</button>
+                    <button class="action-btn" onclick="changeScene('tkp', 'Kamu menggeser pintu Gerbong Eksekutif. Hawa dingin menyergap. Teknisi tewas dengan posisi janggal. Saatnya memeriksa petunjuk di sekitarnya.')">> 1. Periksa TKP (Gerbong Eksekutif)</button>
                     <button class="action-btn" onclick="cekRuangKondektur()">> 2. Periksa Ruang Kondektur (Terminal Komputer)</button>
-                    <button class="action-btn" onclick="changeScene('saksi', 'Kamu menuju Kereta Makan. Dua penumpang dan satu Kondektur sedang berkumpul ketakutan.')">> 3. Interogasi Saksi (Kereta Makan)</button>
-                    <button class="action-btn danger mt-4" id="btn-tuduh" style="display:none;" onclick="changeScene('akhir', 'Waktunya menyimpulkan rentetan petunjuk ini.')">> KELUARKAN SURAT PENAHANAN</button>
+                    <button class="action-btn" onclick="changeScene('saksi', 'Kamu menuju Kereta Makan. Dua penumpang dan satu Kondektur duduk saling berjauhan, saling curiga.')">> 3. Interogasi Saksi (Kereta Makan)</button>
+                    <button class="action-btn danger mt-4" id="btn-tuduh" style="display:none;" onclick="changeScene('akhir', 'Bukti telah terkumpul. Jangan sampai salah menunjuk pelakunya.')">> KELUARKAN SURAT PENAHANAN</button>
                 </div>
 
                 <!-- SCENE: TKP -->
                 <div id="scene-tkp" class="scene">
-                    <button class="action-btn" id="btn-mayat" onclick="periksaMayat()">> Periksa Tubuh Korban</button>
-                    <button class="action-btn" id="btn-koper" onclick="periksaKoper()">> Periksa Koper Teknisi (Butuh PIN Luas)</button>
-                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Kembali ke lorong kereta.')">> Kembali ke Lorong</button>
+                    <div class="foto-tkp">
+                        <pre>
+       ,-.
+      (   )  <- Trauma benda tumpul
+       `-'
+      / | \
+     /  |  \
+    '   |   ` 
+       / \   
+      /   \  
+     /     \ 
+    '       `
+                        </pre>
+                        <span style="font-size: 0.85em; font-weight: bold; border-top: 1px solid black; display:inline-block; margin-top:10px; padding-top:5px;">BERKAS VISUM VISUAL: POSISI JATUH KORBAN (TEKNISI ARYA)</span>
+                    </div>
+
+                    <button class="action-btn" id="btn-mayat" onclick="periksaMayat()">> Geledah Saku Jas Korban</button>
+                    <button class="action-btn" id="btn-koper" onclick="periksaKoper()">> Periksa Koper Baja di Sudut Ruangan</button>
+                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Berada di dekat tubuh korban membuatmu merinding. Kamu kembali ke lorong.')">> Mundur ke Lorong</button>
                 </div>
 
                 <!-- SCENE: KOPER (GEOMETRI) -->
                 <div id="scene-koper" class="scene">
-                    <p>Koper ini memiliki gembok 3 digit. Tertulis pesan dari korban:</p>
+                    <p>Koper baja ini dikunci menggunakan gembok rotasi numerik 3 digit. Tertulis ukiran kasar pada logamnya:</p>
                     <div class="clue-text mb-3">
-                        "Sandiku adalah LUAS lantai kabinku (dalam $m^2$) DIKALI DUA.<br>
-                        Catatan dimensi kabin: Panjang diagonal dari sudut ke sudut adalah <strong>13 meter</strong>. Lebar kabin adalah <strong>5 meter</strong>."
+                        "Sandiku adalah LUAS lantai kabinku DIKALI DUA.<br>
+                        Catatan dimensi: Diagonal kabinku tepat membentang sepanjang <strong>13 meter</strong>. Lebar ruanganku berukuran <strong>5 meter</strong>."
                     </div>
-                    <p style="font-size: 0.85em;">(Gunakan Kalkulator Detektif: Cari Panjang dengan rumus Pythagoras, kalikan dengan Lebar untuk mendapat Luas, lalu Kalikan 2).</p>
                     <div class="input-group mb-3 w-50">
-                        <input type="number" id="inputLuas" class="form-control" placeholder="3 Digit PIN...">
-                        <button class="btn btn-dark" onclick="bukaKoper()">Buka</button>
+                        <input type="number" id="inputLuas" class="form-control" placeholder="Tiga Digit PIN...">
+                        <button class="btn btn-dark" onclick="bukaKoper()">Buka Paksa</button>
                     </div>
                     <div id="koper-terbuka" style="display: none; padding: 15px; border: 2px solid var(--border-color); background: rgba(0,0,0,0.05);">
-                        <p><strong>*KLIK!*</strong> Koper terbuka. Kamu menemukan <strong>Kartu GAPEKA</strong> (Grafik Perjalanan Kereta Api) yang robek.</p>
-                        <button class="action-btn" id="btn-ambil-gapeka" onclick="ambilBarang('Kartu GAPEKA', 'btn-ambil-gapeka')">> Ambil Kartu GAPEKA</button>
+                        <p><strong>*KLIK!*</strong> Kunci mekanik terlepas. Di dalamnya terdapat <strong>Kartu GAPEKA</strong> (Grafik Perjalanan Kereta Api) yang ternoda cairan gelap.</p>
+                        <button class="action-btn" id="btn-ambil-gapeka" onclick="ambilBarang('Kartu GAPEKA', 'btn-ambil-gapeka')">> Masukkan ke Tas Bukti</button>
                     </div>
-                    <button class="action-btn mt-3" onclick="changeScene('tkp', 'Mundur dari koper.')">> Mundur</button>
+                    <button class="action-btn mt-3" onclick="changeScene('tkp', 'Mundur menjauhi koper.')">> Kembali</button>
                 </div>
 
                 <!-- SCENE: RUANG KONDEKTUR (GAPEKA & TERMINAL) -->
                 <div id="scene-kondektur" class="scene">
                     <div id="terminal-screen">
-                        <p><strong>SISTEM MANIFES & LOG KAI - TERKUNCI</strong></p>
-                        <p>Masukkan 4 digit Waktu (Format HHMM) berdasarkan Kartu GAPEKA Teknisi untuk mengakses Log Keamanan.</p>
+                        <p><strong>SISTEM MANIFES & LOG SENSOR KAI - TERKUNCI</strong></p>
+                        <p>Akses membutuhkan Otorisasi Waktu (Format HHMM).</p>
                         <div class="clue-text mb-3" style="color:var(--terminal-fg); border-color:var(--terminal-fg);">
-                            "KA Pangrango berangkat dari Paledang pukul <strong>22:00</strong> dengan kecepatan konstan <strong>60 km/jam</strong>. Sistem mendeteksi anomali tepat saat kereta melewati Sinyal Masuk <strong>KM 45</strong>. Pukul berapakah itu?"
+                            "LOG GAPEKA: KA Pangrango berangkat pukul <strong>22:00</strong> dengan kecepatan laju konstan <strong>60 km/jam</strong>.<br>Anomali pintu kabin tercatat saat kereta melewati pos Sinyal Masuk <strong>KM 45</strong>."
                         </div>
-                        <input type="number" id="inputWaktu" placeholder="HHMM (Misal: 2315)">
-                        <button class="action-btn terminal-btn d-inline w-auto" onclick="bukaTerminal()">[ RETAS TERMINAL ]</button>
+                        <input type="number" id="inputWaktu" placeholder="Masukan HHMM">
+                        <button class="action-btn terminal-btn d-inline w-auto" onclick="bukaTerminal()">[ BYPASS SISTEM ]</button>
                         
                         <div id="terminal-terbuka" style="display: none; margin-top: 15px; border-top: 1px dashed var(--terminal-fg); padding-top: 10px;">
-                            <p><strong>AKSES DITERIMA.</strong> Memuat Log Sensor...</p>
-                            <p><em>> SENSOR GERBONG 3: Terkunci otomatis sejak pukul 21:00 akibat malfungsi. Tidak ada satupun yang masuk atau keluar dari Gerbong 3 sejak saat itu.</em></p>
-                            <p>Selain itu, laci terminal terbuka otomatis. Di dalamnya terdapat <strong>Buku Sandi Kotak</strong> dan robekan kertas berlumuran darah membentuk pola:</p>
+                            <p><strong>OTENTIKASI DITERIMA.</strong> Mengakses Log Sensor Internal...</p>
+                            <p><em>> [21:00] SENSOR GERBONG 3: Status TERKUNCI DEADLOCK akibat malfungsi pneumatik. Tidak ada satupun entitas yang dapat masuk atau keluar dari Gerbong 3 sejak stempel waktu ini.</em></p>
+                            <p>Mekanisme laci meja terbuka akibat peretasan sistem. Kamu menemukan <strong>Buku Sandi Kotak</strong> dan robekan kertas berlumuran darah yang membentuk garis tegas:</p>
                             <div class="sandi-container bg-light p-2">
                                 <div class="sk sk-b"></div>
                                 <div class="sk sk-i"></div>
                                 <div class="sk sk-m"></div>
                                 <div class="sk sk-a"></div>
                             </div>
-                            <button class="action-btn danger w-auto mt-2" id="btn-ambil-bukti" onclick="ambilBarang('Log Sensor & Sandi Kotak', 'btn-ambil-bukti')">> Simpan Bukti Kritis</button>
+                            <button class="action-btn danger w-auto mt-2" id="btn-ambil-bukti" onclick="ambilBarang('Log Sensor & Sandi Kotak', 'btn-ambil-bukti')">> Unduh Log & Ambil Kertas</button>
                         </div>
                     </div>
-                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Keluar dari ruang kondektur.')">> Keluar Ruangan</button>
+                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Keluar dari ruang kondektur yang pengap.')">> Tutup Pintu Ruangan</button>
                 </div>
 
-                <!-- SCENE: SAKSI -->
+                <!-- SCENE: SAKSI (INTEROGASI) -->
                 <div id="scene-saksi" class="scene">
-                    <button class="action-btn" onclick="bicara('Bapak Tatang', 'Saya pedagang. Saya tidur pulas di Gerbong Ekonomi 1! Saya tidak tahu apa-apa!')">> Interogasi Bapak Tatang</button>
-                    <button class="action-btn" onclick="bicara('Nyonya Rina', 'Jangan tuduh saya! Saya berada di kabin Eksekutif 1 saya membaca buku sejak jam 21:30!')">> Interogasi Nyonya Rina</button>
-                    <button class="action-btn" onclick="bicara('Kondektur Bima', 'Saya sibuk bertugas! Tepat pada jam 22:30 (waktu kejadian), saya sedang berpatroli ke dalam Gerbong 3. Saya bisa memastikannya!')">> Interogasi Kondektur Bima</button>
-                    <button class="action-btn mt-3" onclick="changeScene('koridor', 'Seseorang dari mereka berbohong. Kamu kembali ke lorong.')">> Kembali ke Lorong</button>
+                    <div id="daftar-saksi">
+                        <button class="action-btn" onclick="mulaiInterogasi('Tatang')">> Interogasi Bapak Tatang (Pedagang)</button>
+                        <button class="action-btn" onclick="mulaiInterogasi('Rina')">> Interogasi Nyonya Rina (Sosialita)</button>
+                        <button class="action-btn" onclick="mulaiInterogasi('Bima')">> Interogasi Kondektur Bima</button>
+                        <button class="action-btn mt-3" onclick="changeScene('koridor', 'Seseorang dari mereka berbohong dengan sangat rapi. Kamu kembali ke lorong.')">> Akhiri Interogasi Sementara</button>
+                    </div>
+                    <div id="pertanyaan-saksi" style="display:none; border-left: 3px solid var(--border-color); padding-left: 15px;">
+                        <!-- Tombol interogasi dinamis muncul di sini -->
+                    </div>
                 </div>
 
                 <!-- SCENE: AKHIR -->
                 <div id="scene-akhir" class="scene">
-                    <p>Semua kepingan teka-teki sudah terkumpul.</p>
+                    <p>Semua kepingan teka-teki telah dirangkai.</p>
                     <ul class="mb-3">
-                        <li>Siapa yang memiliki <strong>Alibi Palsu</strong> berdasarkan Log Terminal?</li>
-                        <li>Siapa yang namanya dieja oleh <strong>Sandi Kotak Berdarah</strong>?</li>
+                        <li>Evaluasi silang antara <strong>Alibi Interogasi</strong> dengan <strong>Log Sensor Sistem</strong>.</li>
+                        <li>Dekripsi akhir dari <strong>Sandi Kotak Berdarah</strong>.</li>
                     </ul>
                     <select id="pilihanPelaku" class="form-select mb-3 w-50 border-dark rounded-0">
-                        <option value="">-- Pilih Tersangka Utama --</option>
-                        <option value="Tatang">Bapak Tatang (Pedagang)</option>
-                        <option value="Rina">Nyonya Rina (Penumpang VVIP)</option>
+                        <option value="">-- Tetapkan Status Tersangka --</option>
+                        <option value="Tatang">Bapak Tatang</option>
+                        <option value="Rina">Nyonya Rina</option>
                         <option value="Bima">Kondektur Bima</option>
                     </select>
-                    <button class="action-btn danger" onclick="tangkapPelaku()">TANGKAP PELAKU</button>
+                    <button class="action-btn danger" onclick="tangkapPelaku()">EKSEKUSI PENANGKAPAN</button>
                 </div>
             </div>
 
@@ -243,7 +280,7 @@
             <div class="col-md-4" id="tools-area">
                 <div class="mb-4">
                     <div class="tool-title">Buku Catatan Saku</div>
-                    <textarea id="notepad" placeholder="- Catat rumus Pythagoras di sini...&#10;- Catat rumus Waktu (Jarak/Kecepatan)...&#10;- Catat alibi para saksi..."></textarea>
+                    <textarea id="notepad" placeholder="- Catat hubungan dimensi ruang (Geometri)...&#10;- Catat rumusan jarak, kecepatan, waktu (Fisika)...&#10;- Catat alibi para saksi di sini..."></textarea>
                 </div>
 
                 <div>
@@ -277,7 +314,7 @@
         </div>
 
         <div id="inventory-bar">
-            Tas Bukti (Harus Lengkap untuk Menuduh): <span id="inventory-list">KOSONG</span>
+            Tas Bukti (Prasyarat Penangkapan): <span id="inventory-list">KOSONG</span>
         </div>
 
     </div>
@@ -370,7 +407,7 @@
         if(audioCtx.state === 'suspended') audioCtx.resume();
         document.getElementById('start-overlay').style.display = 'none';
         playGhost(); 
-        changeScene('koridor', 'Malam semakin larut. Kereta KA Pangrango menembus badai. Pembunuh itu sangat cerdas, meninggalkan petunjuk matematika dan memalsukan log. Kamu harus lebih cerdas darinya.');
+        changeScene('koridor', 'Kereta KA Pangrango terus melaju menembus malam yang pekat. Seorang teknisi telah dihabisi. Pembunuhnya sangat terorganisir. Tetap waspada.');
     }
 
     function typeWriter(text) {
@@ -393,6 +430,13 @@
     function changeScene(sceneId, narasi) {
         document.querySelectorAll('.scene').forEach(el => el.classList.remove('active'));
         document.getElementById(`scene-${sceneId}`).classList.add('active');
+        
+        // Reset tampilan interogasi jika masuk ke scene saksi
+        if(sceneId === 'saksi') {
+            document.getElementById('daftar-saksi').style.display = 'block';
+            document.getElementById('pertanyaan-saksi').style.display = 'none';
+        }
+
         typeWriter(narasi);
         if(Math.random() < 0.15) setTimeout(() => playGhost(), 800); 
         cekProgres();
@@ -410,69 +454,101 @@
             updateInventory();
             playSuccess();
             document.getElementById(btnId).disabled = true;
-            document.getElementById(btnId).innerHTML = "Disimpan";
-            typeWriter(`Item [${namaBarang}] dimasukkan ke Tas Bukti.`);
+            document.getElementById(btnId).innerHTML = "Telah Diamankan";
+            typeWriter(`Barang bukti krusial [${namaBarang}] dimasukkan ke dalam Tas Bukti.`);
             cekProgres();
         }
     }
 
     function periksaMayat() {
-        typeWriter("Kamu menggeledah saku korban dan menemukan sebuah Kunci Magnetik berlabel 'RUANG KONDEKTUR'.");
+        typeWriter("Kamu merogoh saku kemeja korban yang robek. Kamu menemukan Kunci Magnetik dengan ukiran 'OTORISASI KONDEKTUR'.");
         state.punyaKunciKondektur = true;
         document.getElementById('btn-mayat').disabled = true;
-        document.getElementById('btn-mayat').innerHTML = "Kunci Kondektur Diambil";
+        document.getElementById('btn-mayat').innerHTML = "Kunci Otorisasi Ditemukan";
         playSuccess();
     }
 
     function periksaKoper() {
-        if (state.koperBuka) { changeScene('koper', 'Koper ini sudah tidak terkunci.'); } 
-        else { changeScene('koper', 'Analisis Geometri diperlukan. Hitung dengan hati-hati.'); }
+        if (state.koperBuka) { changeScene('koper', 'Mekanisme koper sudah dinonaktifkan.'); } 
+        else { changeScene('koper', 'Terdapat mekanisme gembok rotasi. Evaluasi dimensi ruang secara akurat sebelum memasukkan angka.'); }
     }
 
-    // Logic Koper: Diagonal 13, Lebar 5. Panjang = akar(13^2 - 5^2) = akar(169-25) = akar(144) = 12. 
-    // Luas = 12 * 5 = 60. PIN (Luas dikali 2) = 120.
     function bukaKoper() {
         const kode = document.getElementById('inputLuas').value;
         if (kode === "120") {
             state.koperBuka = true;
             playSuccess();
-            typeWriter("Analisis geometrimu sempurna! Koper terbuka.");
+            typeWriter("Analisis matematis yang sempurna. Kunci berputar dan koper terbuka.");
             document.getElementById('inputLuas').disabled = true;
             document.getElementById('koper-terbuka').style.display = 'block';
         } else {
             playError();
-            typeWriter("Sandi salah. (Cari Panjang sisi menggunakan Phytagoras. Kuadratkan Diagonal (13x13) kurangi Kuadrat Lebar (5x5), lalu cari akarnya. Hasilnya kalikan Lebar, lalu kalikan 2!)");
+            // Pesan error lebih profesional, tidak memberi rumus secara gamblang
+            typeWriter("Sandi Ditolak. Kalkulasi dimensimu meleset. (Petunjuk: Evaluasi hubungan teorema antara garis diagonal dan sisi datar ruangan terlebih dahulu, baru temukan total luasnya).");
         }
     }
 
     function cekRuangKondektur() {
         if(state.punyaKunciKondektur) {
-            changeScene('kondektur', 'Kunci magnetik berfungsi. Kamu masuk ke ruang kondektur yang ditinggalkan. Terdapat layar terminal komputer menyala berkedip hijau.');
+            changeScene('kondektur', 'Pemindai menerima Kunci Magnetikmu. Ruangan gelap gulita, namun layar terminal komputer masih menyala, menunggu input otorisasi.');
         } else {
             playError();
-            typeWriter("Pintu Ruang Kondektur terkunci rapat. Kamu butuh Kunci Akses (Cari di sekitar tubuh korban).");
+            typeWriter("Akses Ditolak. Pemindai pintu berwarna merah. Kamu membutuhkan Kunci Magnetik khusus untuk masuk ke ruangan ini.");
         }
     }
 
-    // Logic Waktu: 45km / 60km/jam = 0.75 jam = 45 menit. Berangkat 22:00 + 45 menit = 22:45. PIN = 2245.
     function bukaTerminal() {
         const kode = document.getElementById('inputWaktu').value;
         if (kode === "2245") {
             state.terminalBuka = true;
             playSuccess();
-            typeWriter("Sistem Berhasil Diretas! Kalkulasi GAPEKA (Fisika Jarak/Kecepatan) milikmu tepat sasaran.");
+            typeWriter("Bypass Sistem Berhasil. Perhitungan kecepatan dan jarakmu sangat akurat.");
             document.getElementById('inputWaktu').disabled = true;
             document.getElementById('terminal-terbuka').style.display = 'block';
         } else {
             playError();
-            typeWriter("Sistem Menolak: Waktu tidak valid. (Gunakan rumus Waktu = Jarak dibagi Kecepatan. Jarak 45 dibagi Kecepatan 60 = 0.75 Jam = 45 Menit. Tambahkan ke jam berangkat!)");
+            // Pesan error lebih profesional
+            typeWriter("SISTEM ERROR: Stempel waktu logik tidak sinkron. (Petunjuk: Ingatlah kaidah dasar kinematika. Evaluasi seberapa lama waktu yang dibutuhkan untuk menempuh jarak tersebut, lalu korelasikan dengan waktu keberangkatan).");
         }
     }
 
-    function bicara(nama, teks) { typeWriter(`Transkrip: [${nama}] "${teks}"`); }
+    // SISTEM INTEROGASI DINAMIS
+    function mulaiInterogasi(nama) {
+        let opsi = '';
+        if(nama === 'Tatang') {
+            opsi = `
+                <button class="action-btn" onclick="bicara('Tatang', 'Tidur! Saya tidur pulas di gerbong saya! Hujan deras membuat saya mengantuk.')">> "Di mana Anda pada pukul 22:30?"</button>
+                <button class="action-btn" onclick="bicara('Tatang', 'Teknisi? Saya ini pedagang kain, Pak Detektif. Saya tidak berurusan dengan pegawai kereta.')">> "Apa hubungan Anda dengan korban?"</button>
+            `;
+        } else if(nama === 'Rina') {
+            opsi = `
+                <button class="action-btn" onclick="bicara('Rina', 'Saya berada di kabin Eksekutif 1. Sedang membaca buku sejak jam 21:30. Jangan ganggu saya.')">> "Tolong jelaskan aktivitas Anda sejak pukul 21:30."</button>
+                <button class="action-btn" onclick="bicara('Rina', 'Pintu gerbong ini sangat berat. Itu saja yang mengganggu saya.')">> "Apakah Anda mendengar keributan?"</button>
+            `;
+        } else if(nama === 'Bima') {
+            opsi = `
+                <button class="action-btn" onclick="bicara('Bima', 'Tepat pada jam 22:30, saya sedang melakukan patroli rutin di dalam Gerbong 3. Semuanya kondusif. Saya berani bersumpah.')">> "Laporkan rute patroli Anda pada pukul 22:30."</button>
+                <button class="action-btn" onclick="bicara('Bima', 'Beliau teknisi yang handal. Sayang sekali beliau harus bernasib seperti ini. Pasti ada penyusup.')">> "Menurut Anda, siapa pelakunya?"</button>
+            `;
+        }
+
+        document.getElementById('daftar-saksi').style.display = 'none';
+        document.getElementById('pertanyaan-saksi').innerHTML = opsi + `<button class='action-btn mt-4 danger' onclick='kembaliInterogasi()'>[ BERHENTI BERTANYA ]</button>`;
+        document.getElementById('pertanyaan-saksi').style.display = 'block';
+        typeWriter(`Kamu menatap tajam ke arah ${nama}. Pilih sudut interogasimu.`);
+    }
+
+    function kembaliInterogasi() {
+        document.getElementById('pertanyaan-saksi').style.display = 'none';
+        document.getElementById('daftar-saksi').style.display = 'block';
+        typeWriter(`Kamu mundur selangkah, mencerna alibi mereka. Siapa lagi yang ingin kamu tekan?`);
+    }
+
+    function bicara(nama, teks) { 
+        typeWriter(`[Transkrip Interogasi - ${nama}]: "${teks}"`); 
+    }
 
     function cekProgres() {
-        // Harus ambil Gapeka dan Bukti Akhir (Log + Sandi) untuk bisa menuduh.
         if (state.inventory.includes('Kartu GAPEKA') && state.inventory.includes('Log Sensor & Sandi Kotak')) {
             document.getElementById('btn-tuduh').style.display = 'block';
         }
@@ -482,25 +558,25 @@
         const pelaku = document.getElementById('pilihanPelaku').value;
 
         if (pelaku === "") {
-            playError(); typeWriter("Pilih satu target!");
+            playError(); typeWriter("Otoritas tidak sah. Anda harus menetapkan satu target yang valid.");
         } else if (pelaku === "Bima") {
             playGhost();
             document.getElementById('game-area').innerHTML = `
                 <div class="text-center mt-4">
-                    <h2 style="color:var(--blood-red); font-weight:bold; border-bottom: 2px solid var(--blood-red); display:inline-block;">KASUS DITUTUP DENGAN GEMILANG</h2>
-                    <p class="mt-4"><strong>Kamu memecahkan rentetan teka-teki tersulit malam ini!</strong></p>
+                    <h2 style="color:var(--blood-red); font-weight:bold; border-bottom: 2px solid var(--blood-red); display:inline-block;">INVESTIGASI SELESAI</h2>
+                    <p class="mt-4"><strong>Kerja yang luar biasa memuaskan, Detektif. Tidak ada satupun variabel yang luput dari pandanganmu.</strong></p>
                     <p style="text-align:left;">
-                    1. <strong>Geometri:</strong> Dengan tenang, kamu menghitung teorema Pythagoras ($l = \\sqrt{13^2 - 5^2} = \\sqrt{144} = 12$) lalu menemukan Luas $60$ dan memasukkan PIN $120$.<br><br>
-                    2. <strong>Logika GAPEKA:</strong> Kamu menganalisis rute kereta, membagi $45$ km dengan $60$ km/jam ($0.75$ jam = $45$ menit), meretas terminal pada sandi waktu $2245$.<br><br>
-                    3. <strong>Analisis Bukti:</strong> Kondektur Bima berbohong sedang berada di Gerbong 3 pada jam 22:30, padahal Terminal membuktikan gerbong itu rusak dan terkunci rapat sejak jam 21:00.<br><br>
-                    4. <strong>Kriptografi:</strong> Sandi Kotak tersebut dengan sempurna mengeja <strong>B-I-M-A</strong>. Dialah monster sesungguhnya yang meretas kereta ini!
+                    1. <strong>Analisis Spasial:</strong> Kamu berhasil mendekomposisi ruang geometris untuk membongkar koper tanpa bantuan langsung.<br><br>
+                    2. <strong>Logika GAPEKA:</strong> Analisis kinematikamu membedah rentang waktu logis pada log perjalanan, membuka celah untuk meretas sistem pusat.<br><br>
+                    3. <strong>Analisis Kontradiksi Alibi:</strong> Kondektur Bima berbohong sedang berpatroli di Gerbong 3 pada pukul 22:30. Log Terminal memastikan gerbong itu telah terisolasi akibat kerusakan sejak 21:00.<br><br>
+                    4. <strong>Dekripsi Kriptografi:</strong> Manipulasi garis pada sandi kotak pramuka kuno itu secara definitif mengeja nama <strong>B-I-M-A</strong>. Dialah otak di balik sabotase malam ini.
                     </p>
-                    <button class="action-btn text-center mt-3 w-50" onclick="location.reload()">Selesaikan Bertugas</button>
+                    <button class="action-btn text-center mt-3 w-50" onclick="location.reload()">Sematkan Lencana, Tutup Berkas</button>
                 </div>
             `;
         } else {
             playError();
-            typeWriter("TUDUHAN SALAH! Log Terminal membuktikan orang itu jujur. Pembunuh aslinya baru saja melompat keluar dari kereta dan melarikan diri menembus malam...");
+            typeWriter("PENANGKAPAN GAGAL. Tersangka yang kamu pilih memiliki alibi yang valid di mata hukum. Sang eksekutor sejati mengawasi kegagalanmu dari sudut gelap gerbong...");
         }
     }
 </script>
