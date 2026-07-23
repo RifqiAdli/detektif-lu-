@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Tunjuk Sebut Masinis KAI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome untuk Ikon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 p-4 md:p-8 flex items-center justify-center">
+
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden">
+        <!-- Header KAI Style -->
+        <div class="bg-[#2D2A70] text-white p-6 text-center border-b-4 border-[#F26522]">
+            <h1 class="text-2xl font-bold tracking-wide">SIMULATOR TUNJUK SEBUT</h1>
+            <p class="text-slate-300 text-sm mt-2">Berdasarkan Peraturan Dinas 3 PT KAI</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="p-6 md:p-10 flex flex-col items-center">
+            
+            <!-- Area Visual Semboyan -->
+            <div class="h-64 flex items-center justify-center w-full mb-8 relative">
+                <div id="signal-container" class="transition-transform transform hover:scale-105 duration-300">
+                    <!-- Sinyal akan di-inject oleh JavaScript -->
+                </div>
+                
+                <!-- Animasi Tangan Menunjuk -->
+                <div id="pointing-hand" class="absolute bottom-0 right-1/4 text-6xl text-yellow-500 opacity-0 transition-opacity duration-300 transform rotate-[-20deg]">
+                    <i class="fa-solid fa-hand-pointer drop-shadow-md"></i>
+                </div>
+            </div>
+
+            <!-- Area Interaksi -->
+            <div class="w-full text-center space-y-6">
+                
+                <!-- Langkah 1 -->
+                <div id="step-1">
+                    <p class="text-slate-500 mb-4 text-sm font-semibold uppercase tracking-wider">Langkah 1: Lakukan Tunjuk Sinyal</p>
+                    <button onclick="lakukanTunjuk()" class="bg-[#F26522] hover:bg-[#d9551a] text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all active:scale-95">
+                        <i class="fa-regular fa-hand-point-up mr-2"></i> Tunjuk Semboyan!
+                    </button>
+                </div>
+
+                <!-- Langkah 2 (Opsi Suara/Panggilan) -->
+                <div id="step-2" class="hidden">
+                    <p class="text-slate-500 mb-4 text-sm font-semibold uppercase tracking-wider">Langkah 2: Sebutkan Makna!</p>
+                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Pilihan tombol akan di-inject di sini -->
+                    </div>
+                </div>
+
+                <!-- Hasil Evaluasi -->
+                <div id="result-area" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-6 text-left mt-6">
+                    <div id="result-status" class="text-lg font-bold mb-2"></div>
+                    <p id="result-desc" class="text-slate-600 text-sm leading-relaxed mb-4"></p>
+                    <button onclick="nextSignal()" class="w-full bg-[#2D2A70] hover:bg-[#1f1d4f] text-white font-semibold py-3 rounded-lg transition-colors shadow-md">
+                        Semboyan Selanjutnya <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Semboyan KAI berdasarkan ekstraksi Wikipedia
+        const semboyanData = [
+            {
+                id: "semboyan_5",
+                nama: "Semboyan 5",
+                visual: `
+                    <div class="w-24 h-64 bg-slate-800 rounded-t-full rounded-b-lg flex flex-col items-center justify-around p-3 border-4 border-slate-900 shadow-2xl relative">
+                        <div class="absolute -top-3 w-8 h-8 bg-slate-700 rounded-full"></div>
+                        <div class="w-14 h-14 rounded-full bg-green-500 shadow-[0_0_35px_#22c55e] border-2 border-slate-900"></div>
+                        <div class="w-14 h-14 rounded-full bg-slate-700/50 border-2 border-slate-900"></div>
+                        <div class="w-14 h-14 rounded-full bg-slate-700/50 border-2 border-slate-900"></div>
+                    </div>
+                `,
+                benar: "Semboyan 5, Aman!",
+                deskripsi: "Semboyan 5 mengisyaratkan bahwa jalur kereta api yang akan dilewati berstatus aman, dan kereta api diperbolehkan untuk melanjutkan perjalanan."
+            },
+            {
+                id: "semboyan_6",
+                nama: "Semboyan 6",
+                visual: `
+                    <div class="w-24 h-64 bg-slate-800 rounded-t-full rounded-b-lg flex flex-col items-center justify-around p-3 border-4 border-slate-900 shadow-2xl relative">
+                        <div class="absolute -top-3 w-8 h-8 bg-slate-700 rounded-full"></div>
+                        <div class="w-14 h-14 rounded-full bg-slate-700/50 border-2 border-slate-900"></div>
+                        <div class="w-14 h-14 rounded-full bg-yellow-400 shadow-[0_0_35px_#facc15] border-2 border-slate-900"></div>
+                        <div class="w-14 h-14 rounded-full bg-slate-700/50 border-2 border-slate-900"></div>
+                    </div>
+                `,
+                benar: "Semboyan 6, Hati-hati Kecepatan Terbatas!",
+                deskripsi: "Semboyan 6 mengisyaratkan bahwa jalur kereta api yang akan dilewati berstatus kurang aman, dan kereta api diperbolehkan untuk melanjutkan perjalanan dengan kecepatan terbatas dan hati-hati."
+            },
+            {
+                id: "semboyan_3",
+                nama: "Semboyan 3",
+                visual: `
+                    <div class="w-24 h-64 bg-slate-800 rounded-t-full rounded-b-lg flex flex-col items-center justify-around p-3 border-4 border-slate-900 shadow-2xl relative">
+                        <div class="absolute -top-3 w-8 h-8 bg-slate-700 rounded-full"></div>
+                        <div class="w-14 h-14 rounded-full bg-slate-700/50 border-2 border-slate-900"></div>
+                        <div class="w-14 h-14 rounded-full bg-slate-700/50 border-2 border-slate-900"></div>
+                        <div class="w-14 h-14 rounded-full bg-red-500 shadow-[0_0_35px_#ef4444] border-2 border-slate-900"></div>
+                    </div>
+                `,
+                benar: "Semboyan 3, Berhenti!",
+                deskripsi: "Semboyan 3 mengisyaratkan bahwa jalur kereta api yang akan dilewati berstatus tidak aman, sehingga kereta api diharuskan untuk berhenti."
+            },
+            {
+                id: "semboyan_2A",
+                nama: "Semboyan 2A",
+                visual: `
+                    <div class="flex flex-col items-center">
+                        <div class="w-32 h-32 rounded-full bg-yellow-400 border-[8px] border-black flex items-center justify-center text-black font-black text-5xl shadow-lg z-10 relative">
+                            40
+                        </div>
+                        <div class="w-4 h-32 bg-slate-400 -mt-2 border-x-2 border-slate-500 shadow-md"></div>
+                    </div>
+                `,
+                benar: "Semboyan 2A, Awas Taspat 40!",
+                deskripsi: "Semboyan 2A mengisyaratkan bahwa jalur kereta api yang akan dilewati berstatus kurang aman, sehingga kereta api harus berhati-hati dengan pembatasan kecepatan maksimal 40 kilometer per jam."
+            }
+        ];
+
+        // Bank jawaban untuk mengecoh
+        const semuaPanggilan = [
+            "Semboyan 5, Aman!",
+            "Semboyan 6, Hati-hati Kecepatan Terbatas!",
+            "Semboyan 3, Berhenti!",
+            "Semboyan 2A, Awas Taspat 40!",
+            "Semboyan 1, Siap Jalan!",
+            "Semboyan 2B, Awas Taspat 20!"
+        ];
+
+        let currentSignal = null;
+
+        function initApp() {
+            nextSignal();
+        }
+
+        function nextSignal() {
+            // Reset state UI
+            document.getElementById('step-1').classList.remove('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('result-area').classList.add('hidden');
+            
+            const hand = document.getElementById('pointing-hand');
+            hand.style.opacity = "0";
+            hand.classList.remove('animate-bounce');
+
+            // Pilih semboyan acak
+            const randomIndex = Math.floor(Math.random() * semboyanData.length);
+            currentSignal = semboyanData[randomIndex];
+
+            // Tampilkan visual
+            document.getElementById('signal-container').innerHTML = currentSignal.visual;
+        }
+
+        function lakukanTunjuk() {
+            // Tampilkan animasi tangan menunjuk
+            const hand = document.getElementById('pointing-hand');
+            hand.style.opacity = "1";
+            hand.classList.add('animate-bounce');
+
+            // Lanjut ke fase menyebutkan makna
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+
+            generateOptions();
+        }
+
+        function generateOptions() {
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            // Siapkan 1 jawaban benar dan 3 jawaban salah (acak)
+            let options = [currentSignal.benar];
+            let wrongOptions = semuaPanggilan.filter(p => p !== currentSignal.benar);
+            
+            // Acak jawaban salah dan potong jadi 3
+            wrongOptions = wrongOptions.sort(() => 0.5 - Math.random()).slice(0, 3);
+            options = [...options, ...wrongOptions].sort(() => 0.5 - Math.random()); // Gabung lalu acak posisinya
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-slate-200 hover:border-[#F26522] hover:text-[#F26522] text-slate-700 font-semibold py-4 px-4 rounded-xl transition-all text-sm shadow-sm";
+                btn.innerText = opt;
+                btn.onclick = () => cekJawaban(opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function cekJawaban(jawaban) {
+            document.getElementById('step-2').classList.add('hidden');
+            const resultArea = document.getElementById('result-area');
+            const resultStatus = document.getElementById('result-status');
+            const resultDesc = document.getElementById('result-desc');
+            
+            resultArea.classList.remove('hidden');
+
+            // Validasi Evaluasi
+            if(jawaban === currentSignal.benar) {
+                resultStatus.innerHTML = '<span class="text-green-600"><i class="fa-solid fa-circle-check"></i> Sempurna!</span>';
+                resultArea.className = "bg-green-50 border border-green-200 rounded-xl p-6 text-left mt-6 block";
+            } else {
+                resultStatus.innerHTML = '<span class="text-red-600"><i class="fa-solid fa-circle-xmark"></i> Kurang Tepat!</span>';
+                resultArea.className = "bg-red-50 border border-red-200 rounded-xl p-6 text-left mt-6 block";
+            }
+
+            // Tampilkan deskripsi asli dari Wikipedia
+            resultDesc.innerHTML = `<strong>${currentSignal.nama}:</strong> ${currentSignal.deskripsi}`;
+        }
+
+        // Inisialisasi saat web dimuat
+        window.onload = initApp;
+    </script>
+</body>
+</html>
