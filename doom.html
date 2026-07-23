@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main DOOM di Browser</title>
+    <!-- Memuat Library js-dos -->
+    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #ff3333;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        #app {
+            width: 640px;
+            height: 400px;
+            max-width: 100%;
+            border: 4px solid #222;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.3);
+            background: #000;
+        }
+        .instructions {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #aaa;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Classic DOOM</h1>
+    
+    <!-- Wadah Emulator -->
+    <div id="app"></div>
+
+    <div class="instructions">
+        <p>Gunakan tombol <strong>W, A, S, D</strong> atau <strong>Panah Keyboard</strong> untuk bergerak, <strong>Ctrl</strong> untuk menembak, dan <strong>Spasi</strong> untuk membuka pintu.</p>
+    </div>
+
+    <script>
+        // Inisialisasi emulator DOOM menggunakan js-dos
+        Dos(document.getElementById("app"), {
+            url: "https://v8.js-dos.com/bundles/doom.jsdos",
+        });
+    </script>
+
+</body>
+</html>
