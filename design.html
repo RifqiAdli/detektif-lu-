@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri & Prompt Desain Web Kekinian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            grid-auto-rows: 200px;
+        }
+        .bento-item {
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .bento-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .bento-wide { grid-column: span 2; }
+        .bento-tall { grid-row: span 2; }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            margin: 5% auto;
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Neumorphism specific styling for preview */
+        .neu-button {
+            border-radius: 50px;
+            background: #e0e5ec;
+            box-shadow: 20px 20px 60px #bec3c9, -20px -20px 60px #ffffff;
+            border: none;
+        }
+        .dark .neu-button {
+            background: #1e293b;
+            box-shadow:  9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px  rgba(255,255,255, 0.5);
+        }
+        
+        /* Claymorphism */
+        .clay-box {
+            border-radius: 2rem;
+            background: #f1f5f9;
+            box-shadow: 15px 15px 30px #cbd5e1, -15px -15px 30px #ffffff, 
+                        inset 4px 4px 10px rgba(255, 255, 255, 1), 
+                        inset -4px -4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .dark .clay-box {
+            background: #1e293b;
+            box-shadow: 15px 15px 30px #0f172a, -15px -15px 30px #334155, 
+                        inset 4px 4px 10px rgba(255, 255, 255, 0.1), 
+                        inset -4px -4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Aurora / Mesh Gradient */
+        .aurora-bg {
+            background-color: #4158D0;
+            background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+            background-size: 300% 300%;
+            animation: AuroraAnimate 8s ease infinite;
+        }
+        @keyframes AuroraAnimate { 
+            0%{background-position:0% 50%} 
+            50%{background-position:100% 50%} 
+            100%{background-position:0% 50%} 
+        }
+        
+        /* Retro 90s OS */
+        .font-retro { font-family: 'Press Start 2P', system-ui, sans-serif; }
+        .retro-window {
+            background: #c0c0c0;
+            border-top: 3px solid #ffffff;
+            border-left: 3px solid #ffffff;
+            border-right: 3px solid #000000;
+            border-bottom: 3px solid #000000;
+        }
+        .retro-inset {
+            background: #ffffff;
+            border-top: 3px solid #808080;
+            border-left: 3px solid #808080;
+            border-right: 3px solid #ffffff;
+            border-bottom: 3px solid #ffffff;
+        }
+        .retro-btn {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #000000;
+            border-bottom: 2px solid #000000;
+            cursor: pointer;
+        }
+        .retro-btn:active {
+            border-top: 2px solid #000000;
+            border-left: 2px solid #000000;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+        }
+        
+        /* Swiss Typography */
+        .font-swiss { font-family: 'Space Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-dark dark:text-slate-200">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent">
+        <div class="max-w-7xl mx-auto">
+            <div class="py-4 border-b border-slate-900/10 lg:px-8 lg:border-0 dark:border-slate-300/10 px-4 sm:px-6">
+                <div class="relative flex items-center justify-between">
+                    <a class="flex-none font-bold text-xl tracking-tight text-primary flex items-center gap-2" href="#">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> PromptUI
+                    </a>
+                    <div class="flex items-center gap-4">
+                        <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-slate-500 dark:hover:text-slate-300">
+                            <span class="sr-only">GitHub</span>
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                        <button id="theme-toggle" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 focus:outline-none">
+                            <i class="fa-solid fa-moon text-xl hidden dark:block" id="theme-toggle-light-icon"></i>
+                            <i class="fa-solid fa-sun text-xl block dark:hidden" id="theme-toggle-dark-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                Koleksi <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Desain UI Web Kekinian</span>
+            </h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
+                Jelajahi tren desain UI modern. Dapatkan inspirasi layout, komponen, dan salin prompt yang tepat untuk membuatnya menggunakan AI (seperti Gemini, Claude, atau ChatGPT).
+            </p>
+        </div>
+
+        <!-- Design Catalog -->
+        <div class="space-y-24">
+
+            <!-- 1. Glassmorphism -->
+            <section id="glassmorphism" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-regular fa-clone text-primary"></i> Glassmorphism
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Efek kaca buram (frosted glass) yang menciptakan kedalaman dan membiarkan latar belakang terlihat samar. Sangat populer di dashboard modern dan kartu profil.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-glass">
+                                Buatkan sebuah komponen kartu profil menggunakan HTML dan Tailwind CSS dengan gaya 'Glassmorphism'. Kartu tersebut harus melayang di atas latar belakang gradien cerah (misalnya ungu ke merah muda). Kartu harus memiliki efek backdrop-blur (frosted glass), border semi-transparan putih, dan bayangan lembut. Di dalamnya terdapat gambar avatar melingkar, nama pengguna, dan deskripsi singkat.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-glass')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-glass')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview Komponen
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl p-8 flex justify-center items-center min-h-[350px]">
+                        <!-- Inline Preview of Glassmorphism -->
+                        <div class="glass-panel rounded-2xl p-8 max-w-sm w-full text-center text-white relative overflow-hidden">
+                            <!-- decorative blob -->
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl"></div>
+                            
+                            <img src="https://ui-avatars.com/api/?name=Alex+Design&background=random" alt="Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-white/50 shadow-lg relative z-10">
+                            <h3 class="text-2xl font-bold mb-1 relative z-10">Alex Designer</h3>
+                            <p class="text-white/80 text-sm mb-6 relative z-10">UI/UX Enthusiast | Glassmorphism Lover</p>
+                            <div class="flex justify-center gap-4 relative z-10">
+                                <button class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg backdrop-blur-sm transition-colors border border-white/30 text-sm font-medium">Follow</button>
+                                <button class="bg-white text-purple-600 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors shadow-lg text-sm font-medium">Message</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Bento Box Layout -->
+            <section id="bento-box" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row-reverse gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-table-cells-large text-primary"></i> Bento Box Layout
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Terinspirasi dari kotak makan siang Jepang, layout ini menggunakan grid tidak beraturan dengan sudut membulat untuk menyajikan informasi secara ringkas dan visual yang menarik. Populer dipelopori oleh Apple.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-bento">
+                                Buatkan layout 'Bento Box' menggunakan HTML dan CSS Grid (atau Tailwind CSS grid). Layout harus berisi 5 kotak dengan ukuran berbeda: satu kotak besar (span 2 kolom, span 2 baris), dua kotak sedang mendatar (span 2 kolom), dan dua kotak kecil standar. Setiap kotak harus memiliki border-radius besar (misal 1.5rem), padding yang cukup, warna latar yang lembut, dan efek hover sedikit terangkat (translateY). Isi kotak dengan ikon dan statistik dummy.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-bento')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-bento')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview Layout
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 bg-slate-200 dark:bg-slate-900 rounded-2xl p-4 sm:p-8 min-h-[400px]">
+                        <!-- Inline Preview of Bento Grid -->
+                        <div class="bento-grid">
+                            <div class="bento-item bento-wide bento-tall bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800 relative overflow-hidden">
+                                <div class="absolute -right-4 -bottom-4 opacity-10">
+                                    <i class="fa-solid fa-chart-line text-9xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Total Analytics</h3>
+                                <p class="text-4xl font-extrabold mb-4">+124%</p>
+                                <p class="text-sm opacity-80">Pertumbuhan bulan ini sangat signifikan dibanding kuartal lalu.</p>
+                            </div>
+                            <div class="bento-item bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800">
+                                <i class="fa-solid fa-users text-2xl mb-2"></i>
+                                <span class="font-bold text-xl">12k+</span>
+                                <span class="text-xs">Active Users</span>
+                            </div>
+                            <div class="bento-item bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800">
+                                <i class="fa-solid fa-bolt text-2xl mb-2"></i>
+                                <span class="font-bold text-xl">99.9%</span>
+                                <span class="text-xs">Uptime</span>
+                            </div>
+                            <div class="bento-item bento-wide bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 border border-purple-200 dark:border-purple-800 flex flex-row justify-between items-center text-left">
+                                <div>
+                                    <h4 class="font-bold">Weekly Report</h4>
+                                    <p class="text-sm opacity-80">Ready to download</p>
+                                </div>
+                                <button class="bg-purple-500 text-white p-3 rounded-full hover:bg-purple-600 transition">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Neumorphism / Soft UI -->
+            <section id="neumorphism" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-dot text-primary"></i> Neumorphism
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Atau "Soft UI", menggunakan bayangan terang dan gelap untuk meniru objek fisik yang ditekan ke dalam atau menonjol dari latar belakang. Membutuhkan warna background yang spesifik agar berfungsi dengan baik.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-neu">
+                                Buatkan sebuah pemutar musik sederhana menggunakan desain 'Neumorphism' (Soft UI) dengan HTML dan CSS. Latar belakang harus berwarna abu-abu sangat muda (misal #e0e5ec). Wadah utama dan tombol-tombol (play, pause, next) harus seolah-olah terbuat dari bahan yang sama dengan latar belakang, ditonjolkan menggunakan dua box-shadow: satu shadow gelap di sudut kanan bawah, dan satu shadow putih/terang di sudut kiri atas.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-neu')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-neu')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview UI
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 bg-[#e0e5ec] dark:bg-slate-800 rounded-2xl p-8 flex justify-center items-center min-h-[350px] border border-gray-200 dark:border-slate-700">
+                        <!-- Inline Preview of Neumorphism -->
+                        <div class="neu-button p-8 rounded-3xl max-w-sm w-full text-center">
+                            <div class="w-32 h-32 mx-auto rounded-full mb-6 relative overflow-hidden" style="box-shadow: inset 10px 10px 20px #bec3c9, inset -10px -10px 20px #ffffff;">
+                                <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=200&h=200" alt="Album Art" class="w-full h-full object-cover p-2 rounded-full opacity-80 mix-blend-multiply dark:mix-blend-normal">
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-700 dark:text-gray-300 mb-1">Lo-Fi Chill</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">Beats to code to</p>
+                            
+                            <div class="flex justify-center items-center gap-6">
+                                <button class="w-12 h-12 rounded-full flex justify-center items-center text-gray-500 hover:text-primary transition-colors" style="box-shadow: 5px 5px 10px #bec3c9, -5px -5px 10px #ffffff;">
+                                    <i class="fa-solid fa-backward-step"></i>
+                                </button>
+                                <button class="w-16 h-16 rounded-full flex justify-center items-center text-primary text-xl" style="box-shadow: 5px 5px 10px #bec3c9, -5px -5px 10px #ffffff;">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <button class="w-12 h-12 rounded-full flex justify-center items-center text-gray-500 hover:text-primary transition-colors" style="box-shadow: 5px 5px 10px #bec3c9, -5px -5px 10px #ffffff;">
+                                    <i class="fa-solid fa-forward-step"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center w-full absolute bottom-4 text-slate-500 hidden dark:block">Note: Neumorphism effect is best viewed in Light Mode due to specific shadow requirements.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Neo-Brutalism -->
+            <section id="neo-brutalism" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row-reverse gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-cube text-primary"></i> Neo-Brutalism
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Kebalikan dari desain yang terlalu halus. Menonjolkan garis tepi (border) yang tebal dan hitam, warna-warna primer yang mencolok, bayangan solid (tanpa blur), dan tipografi tebal.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-brutal">
+                                Buatkan form berlangganan newsletter menggunakan gaya 'Neo-Brutalism' dengan Tailwind CSS. Gunakan warna background mencolok (misal kuning terang atau pink). Elemen form (input dan tombol) harus memiliki border solid hitam tebal (border-4 border-black), sudut yang tidak terlalu membulat, dan bayangan hitam solid yang menonjol (offset x dan y yang jelas tanpa blur, misal shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]). Gunakan font sans-serif tebal.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-brutal')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-brutal')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview Desain
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 bg-slate-100 dark:bg-slate-900 rounded-2xl p-8 flex justify-center items-center min-h-[350px] border border-dashed border-slate-300 dark:border-slate-700">
+                        <!-- Inline Preview of Neo Brutalism -->
+                        <div class="bg-[#FF90E8] border-4 border-black p-8 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transform hover:-translate-y-1 transition-transform">
+                            <div class="bg-white border-b-4 border-black -mx-8 -mt-8 mb-6 p-4 flex items-center justify-between">
+                                <h3 class="font-black text-xl uppercase tracking-wider text-black">Newsletter</h3>
+                                <div class="w-4 h-4 bg-black rounded-full"></div>
+                            </div>
+                            <h4 class="text-3xl font-black text-black mb-2 uppercase leading-none">Stay<br>Updated</h4>
+                            <p class="text-black font-medium mb-6 border-l-4 border-black pl-3">Get the latest design trends straight to your inbox. No spam, just pure brutalist content.</p>
+                            
+                            <form onsubmit="event.preventDefault();" class="flex flex-col gap-4">
+                                <input type="email" placeholder="YOUR@EMAIL.COM" class="w-full p-3 border-4 border-black font-bold focus:outline-none focus:bg-[#FFF066] text-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] placeholder-gray-500">
+                                <button class="w-full bg-[#FFF066] text-black font-black uppercase tracking-wider p-4 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all active:bg-[#FF90E8]">
+                                    Subscribe Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <!-- 5. Aurora / Mesh Gradient UI -->
+            <section id="aurora-ui" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-wind text-primary"></i> Aurora / Mesh Gradient
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Latar belakang gradien warna-warni yang cair dan tidak beraturan, mirip cahaya aurora. Sering digabungkan dengan Glassmorphism untuk menciptakan tampilan yang elegan, magis, dan sangat modern.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-aurora">
+                                Buatkan sebuah komponen kartu menggunakan HTML dan Tailwind CSS. Latar belakang kontainer harus menggunakan 'Mesh Gradient' atau efek 'Aurora' yang beranimasi lambat (warna campuran ungu, pink, dan biru). Di atasnya, letakkan kartu dengan efek glassmorphism tebal (backdrop-blur tinggi, background putih sangat transparan). Di dalam kartu, letakkan teks sapaan dan sebuah tombol elegan.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-aurora')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-aurora')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview Desain
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 aurora-bg rounded-2xl p-8 flex justify-center items-center min-h-[350px] overflow-hidden relative">
+                        <div class="glass-panel p-8 rounded-3xl max-w-sm w-full backdrop-blur-xl bg-white/10 dark:bg-black/10 border border-white/40 shadow-2xl z-10 text-white transform hover:scale-105 transition-transform duration-500">
+                            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-6">
+                                <i class="fa-solid fa-sparkles"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-2">Premium Experience</h3>
+                            <p class="text-white/80 mb-6 text-sm leading-relaxed">Immerse yourself in fluid designs. The future of UI is organic, moving, and delightfully unpredictable.</p>
+                            <button class="w-full py-3 bg-white text-purple-600 font-medium rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all">
+                                Get Started
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Claymorphism -->
+            <section id="claymorphism" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row-reverse gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-cloud text-primary"></i> Claymorphism
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Evolusi dari Neumorphism yang lebih ramah. Menonjolkan bentuk 3D yang lembut dan empuk (fluffy) seperti tanah liat. Menggunakan dua inner shadow (terang dan gelap) serta drop shadow pada sudut yang sangat melengkung.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-clay">
+                                Buatkan sebuah kartu profil menggunakan gaya 'Claymorphism'. Elemen utama harus terlihat empuk (fluffy) dengan border-radius yang sangat besar. Warnanya gunakan warna pastel ceria. Tambahkan dua bayangan inset (inset shadow terang di sudut atas, inset shadow gelap di sudut bawah) dan sedikit drop shadow. Tambahkan avatar dan tombol yang juga bergaya clay.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-clay')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-clay')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview Desain
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 bg-slate-50 dark:bg-slate-900 rounded-2xl p-8 flex justify-center items-center min-h-[350px]">
+                        <div class="clay-box p-8 max-w-sm w-full text-center hover:-translate-y-2 cursor-pointer">
+                            <div class="w-24 h-24 mx-auto bg-pink-300 rounded-full mb-4 shadow-[inset_4px_4px_8px_rgba(255,255,255,0.8),inset_-4px_-4px_8px_rgba(0,0,0,0.1)] flex items-center justify-center text-4xl">
+                                🐨
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-700 dark:text-slate-200 mb-1">Friendly UI</h3>
+                            <p class="text-slate-500 text-sm mb-6">Soft, approachable, and fun.</p>
+                            
+                            <button class="w-full py-3 bg-blue-400 text-white font-bold rounded-2xl shadow-[5px_5px_10px_#cbd5e1,-5px_-5px_10px_#ffffff,inset_3px_3px_5px_rgba(255,255,255,0.5),inset_-3px_-3px_5px_rgba(0,0,0,0.1)] dark:shadow-[5px_5px_10px_#0f172a,-5px_-5px_10px_#334155,inset_3px_3px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_5px_rgba(0,0,0,0.2)] active:scale-95 transition-transform">
+                                Connect
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Swiss / Extreme Minimalism -->
+            <section id="swiss-design" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-align-left text-primary"></i> Swiss Typography
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Fokus mutlak pada tipografi yang sangat besar (oversized), ruang kosong (whitespace) yang masif, palet warna monokrom (hitam & putih), dan grid yang sangat kaku. Sangat populer untuk portofolio desainer dan agensi kreatif.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-swiss">
+                                Buatkan bagian 'Hero' landing page menggunakan gaya 'Swiss Design' atau 'Extreme Minimalism'. Gunakan warna latar belakang putih bersih dan teks hitam legam (atau sebaliknya). Jangan gunakan gambar. Judul harus menggunakan font sans-serif tebal dengan ukuran sangat raksasa (text-7xl atau lebih besar), tracking rapat, rata kiri, menyisakan sangat banyak ruang kosong. Tambahkan garis batas tipis yang membentang memisahkan konten.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-swiss')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-swiss')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview Desain
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 bg-white dark:bg-black rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col min-h-[350px] overflow-hidden">
+                        <div class="p-6 border-b border-black dark:border-white flex justify-between items-end">
+                            <span class="text-xs font-bold uppercase tracking-widest text-black dark:text-white">Est. 2026</span>
+                            <span class="text-xs font-bold uppercase tracking-widest text-black dark:text-white">Studio</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-center">
+                            <h2 class="font-swiss text-5xl sm:text-7xl font-bold leading-[0.9] tracking-tighter text-black dark:text-white mb-8">
+                                LESS<br>BUT<br>BETTER.
+                            </h2>
+                            <p class="max-w-xs text-sm font-medium text-black dark:text-white">
+                                Design is not just what it looks like and feels like. Design is how it works.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Retro 90s OS -->
+            <section id="retro-os" class="scroll-mt-24">
+                <div class="flex flex-col md:flex-row-reverse gap-8 items-start">
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-brands fa-windows text-primary"></i> Retro 90s OS
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">
+                            Kembali ke era Windows 95. Elemen UI yang kaku, kotak abu-abu dengan bevel 3D klasik, pixel font, dan warna biru tua. Tren ini sering dipakai di dunia Web3, NFT, atau situs portofolio nostalgia.
+                        </p>
+                        
+                        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 mb-4 relative group">
+                            <h3 class="text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2">Prompt AI</h3>
+                            <p class="text-sm font-mono text-slate-700 dark:text-slate-300" id="prompt-retro">
+                                Buatkan kotak dialog (modal) bergaya antarmuka 'Windows 95 OS Retro' menggunakan HTML dan CSS. Background berwarna abu-abu klasik (#c0c0c0). Jendela memiliki border outset yang menciptakan efek bevel 3D. Header (title bar) berwarna biru tua (navy) dengan teks putih tebal, dan tombol "X" kotak di kanan. Konten di dalamnya menggunakan border inset.
+                            </p>
+                            <button onclick="copyToClipboard('prompt-retro')" class="absolute top-2 right-2 p-2 bg-white dark:bg-slate-700 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:bg-gray-50 dark:hover:bg-slate-600">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                        <button onclick="openPreview('preview-retro')" class="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Preview Desain
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-2/3 bg-teal-600 rounded-2xl p-4 sm:p-8 flex justify-center items-center min-h-[350px]">
+                        <!-- Retro Window -->
+                        <div class="retro-window w-full max-w-sm flex flex-col font-retro text-black text-xs shadow-2xl">
+                            <!-- Title Bar -->
+                            <div class="bg-blue-800 p-1 flex justify-between items-center text-white m-0.5">
+                                <div class="flex items-center gap-2 px-1">
+                                    <i class="fa-solid fa-computer"></i>
+                                    <span>Error.exe</span>
+                                </div>
+                                <button class="retro-btn w-6 h-6 flex justify-center items-center font-bold text-black pb-1">
+                                    x
+                                </button>
+                            </div>
+                            <!-- Content -->
+                            <div class="p-4 flex flex-col gap-4">
+                                <div class="flex items-center gap-4">
+                                    <i class="fa-solid fa-circle-exclamation text-3xl text-yellow-500 bg-black rounded-full border border-black"></i>
+                                    <p class="leading-relaxed">Task failed successfully. Would you like to play Minesweeper instead?</p>
+                                </div>
+                                <div class="retro-inset p-2 bg-white h-20 overflow-y-auto mb-2 text-[10px] text-gray-600">
+                                    > LOADING NOSTALGIA.DLL<br>
+                                    > INITIATING DIAL-UP TONE...<br>
+                                    > WELCOME TO 1995.
+                                </div>
+                                <div class="flex justify-end gap-2">
+                                    <button class="retro-btn px-4 py-2 uppercase">OK</button>
+                                    <button class="retro-btn px-4 py-2 uppercase">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Modals for Full Preview -->
+    
+    <!-- Glassmorphism Modal -->
+    <div id="preview-glass" class="modal">
+        <div class="modal-content bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 min-h-[600px] relative">
+            <button onclick="closeModal('preview-glass')" class="absolute top-4 right-4 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-10 h-10 flex items-center justify-center transition-colors z-50">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-full h-full p-10 flex items-center justify-center">
+                <!-- Full Glass Dashboard Mockup -->
+                <div class="w-full max-w-4xl h-[500px] glass-panel rounded-3xl flex overflow-hidden shadow-2xl relative">
+                    <!-- Decor -->
+                    <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-blue-500/30 rounded-full blur-3xl"></div>
+                    
+                    <!-- Sidebar -->
+                    <div class="w-64 border-r border-white/20 p-6 flex flex-col gap-6 relative z-10">
+                        <div class="text-white font-bold text-xl flex items-center gap-2 mb-8">
+                            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-white/40 to-white/10 flex items-center justify-center border border-white/30"><i class="fa-solid fa-gem"></i></div>
+                            GlassUI
+                        </div>
+                        <nav class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 text-white/90 bg-white/20 px-4 py-2 rounded-lg border border-white/10"><i class="fa-solid fa-house w-5"></i> Dashboard</a>
+                            <a href="#" class="flex items-center gap-3 text-white/60 hover:text-white hover:bg-white/10 px-4 py-2 rounded-lg transition-colors"><i class="fa-solid fa-chart-pie w-5"></i> Analytics</a>
+                            <a href="#" class="flex items-center gap-3 text-white/60 hover:text-white hover:bg-white/10 px-4 py-2 rounded-lg transition-colors"><i class="fa-solid fa-users w-5"></i> Customers</a>
+                        </nav>
+                        <div class="mt-auto bg-white/10 p-4 rounded-xl border border-white/10">
+                            <p class="text-white/80 text-xs mb-2">Storage Usage</p>
+                            <div class="w-full bg-black/20 h-2 rounded-full overflow-hidden">
+                                <div class="bg-white/80 w-3/4 h-full rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Main Content -->
+                    <div class="flex-1 p-8 relative z-10 flex flex-col">
+                        <header class="flex justify-between items-center mb-8">
+                            <h2 class="text-2xl font-semibold text-white">Overview</h2>
+                            <div class="flex items-center gap-4">
+                                <input type="text" placeholder="Search..." class="bg-black/10 border border-white/20 rounded-full px-4 py-1.5 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                                <img src="https://ui-avatars.com/api/?name=User&background=random" class="w-8 h-8 rounded-full border border-white/30" alt="User">
+                            </div>
+                        </header>
+                        <div class="grid grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white/10 border border-white/20 rounded-2xl p-6">
+                                <p class="text-white/60 text-sm mb-1">Total Revenue</p>
+                                <p class="text-3xl font-bold text-white">$45,231</p>
+                                <p class="text-emerald-300 text-xs mt-2"><i class="fa-solid fa-arrow-up"></i> +12% this month</p>
+                            </div>
+                            <div class="bg-white/10 border border-white/20 rounded-2xl p-6">
+                                <p class="text-white/60 text-sm mb-1">Active Users</p>
+                                <p class="text-3xl font-bold text-white">1,204</p>
+                                <p class="text-rose-300 text-xs mt-2"><i class="fa-solid fa-arrow-down"></i> -2% this month</p>
+                            </div>
+                            <div class="bg-white/10 border border-white/20 rounded-2xl p-6">
+                                <p class="text-white/60 text-sm mb-1">Conversion Rate</p>
+                                <p class="text-3xl font-bold text-white">4.3%</p>
+                                <p class="text-emerald-300 text-xs mt-2"><i class="fa-solid fa-arrow-up"></i> +0.5% this month</p>
+                            </div>
+                        </div>
+                        <div class="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center justify-center">
+                            <p class="text-white/50"><i class="fa-solid fa-chart-area text-4xl mb-2 block text-center"></i>Chart Area Placeholder</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bento Modal -->
+    <div id="preview-bento" class="modal">
+        <div class="modal-content bg-gray-100 min-h-[600px] relative">
+            <button onclick="closeModal('preview-bento')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 bg-white shadow-md rounded-full w-10 h-10 flex items-center justify-center transition-colors z-50">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-full h-full p-10 max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Personal Portfolio Bento</h2>
+                <div class="grid grid-cols-4 gap-4 auto-rows-[150px]">
+                    <!-- Profile (Span 2x2) -->
+                    <div class="col-span-2 row-span-2 bg-white rounded-3xl p-8 shadow-sm flex flex-col justify-end relative overflow-hidden group hover:shadow-md transition-shadow">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-orange-200 rounded-bl-full -z-0"></div>
+                        <img src="https://ui-avatars.com/api/?name=Jane+Doe&background=0D8ABC&color=fff&size=128" class="w-20 h-20 rounded-full mb-4 relative z-10 border-4 border-white shadow-lg" alt="Profile">
+                        <h3 class="text-2xl font-bold text-gray-800 relative z-10">Jane Doe</h3>
+                        <p class="text-gray-500 relative z-10">Full Stack Developer & Designer based in Jakarta.</p>
+                    </div>
+                    <!-- Stats -->
+                    <div class="col-span-1 row-span-1 bg-blue-500 text-white rounded-3xl p-6 shadow-sm flex flex-col justify-center hover:-translate-y-1 transition-transform cursor-pointer">
+                        <i class="fa-brands fa-github text-2xl mb-2"></i>
+                        <span class="text-2xl font-bold">142</span>
+                        <span class="text-sm opacity-80">Repositories</span>
+                    </div>
+                    <div class="col-span-1 row-span-1 bg-pink-500 text-white rounded-3xl p-6 shadow-sm flex flex-col justify-center hover:-translate-y-1 transition-transform cursor-pointer">
+                        <i class="fa-brands fa-dribbble text-2xl mb-2"></i>
+                        <span class="text-2xl font-bold">3.2k</span>
+                        <span class="text-sm opacity-80">Followers</span>
+                    </div>
+                    <!-- Skills (Span 2 wide) -->
+                    <div class="col-span-2 row-span-1 bg-gray-800 text-white rounded-3xl p-6 shadow-sm flex flex-col justify-center">
+                        <h4 class="font-bold mb-3">Tech Stack</h4>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 bg-gray-700 rounded-full text-xs font-mono">React</span>
+                            <span class="px-3 py-1 bg-gray-700 rounded-full text-xs font-mono">Tailwind</span>
+                            <span class="px-3 py-1 bg-gray-700 rounded-full text-xs font-mono">Node.js</span>
+                            <span class="px-3 py-1 bg-gray-700 rounded-full text-xs font-mono">Figma</span>
+                        </div>
+                    </div>
+                    <!-- Projects -->
+                    <div class="col-span-2 row-span-2 bg-gradient-to-br from-emerald-400 to-teal-500 text-white rounded-3xl p-8 shadow-sm relative overflow-hidden">
+                        <h3 class="text-2xl font-bold mb-2">Latest Work</h3>
+                        <p class="opacity-90 mb-4">E-Commerce Mobile App Redesign</p>
+                        <button class="bg-white text-teal-600 px-4 py-2 rounded-full text-sm font-bold shadow-sm hover:bg-gray-50 transition-colors">View Project</button>
+                        <i class="fa-solid fa-mobile-screen absolute -bottom-6 -right-6 text-9xl opacity-20"></i>
+                    </div>
+                    <!-- Contact Map -->
+                    <div class="col-span-2 row-span-1 bg-white rounded-3xl p-0 shadow-sm overflow-hidden relative group cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=600&h=200" alt="Map" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <span class="bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full font-medium border border-white/30 flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot"></i> Let's meet
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Neo-Brutal Modal -->
+    <div id="preview-brutal" class="modal">
+        <div class="modal-content bg-[#FFF066] min-h-[600px] border-8 border-black relative">
+            <button onclick="closeModal('preview-brutal')" class="absolute top-4 right-4 text-black bg-white border-4 border-black hover:bg-[#FF90E8] w-12 h-12 flex items-center justify-center transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none z-50">
+                <i class="fa-solid fa-xmark text-xl font-black"></i>
+            </button>
+            <div class="w-full h-full p-10">
+                <!-- Brutalist Landing Page -->
+                <nav class="flex justify-between items-center mb-16 border-b-8 border-black pb-4">
+                    <div class="text-4xl font-black uppercase tracking-tighter">BRUTAL.</div>
+                    <div class="hidden md:flex gap-6 font-bold border-4 border-black bg-white px-6 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <a href="#" class="hover:underline decoration-4 underline-offset-4">Work</a>
+                        <a href="#" class="hover:underline decoration-4 underline-offset-4">About</a>
+                        <a href="#" class="hover:underline decoration-4 underline-offset-4">Contact</a>
+                    </div>
+                </nav>
+                
+                <div class="flex flex-col md:flex-row gap-10 items-center">
+                    <div class="w-full md:w-1/2">
+                        <h1 class="text-6xl md:text-8xl font-black uppercase leading-none mb-6 text-black" style="-webkit-text-stroke: 2px black;">
+                            DESIGN<br>
+                            <span class="bg-[#FF90E8] px-2 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] inline-block mt-2 transform -rotate-2">OUT LOUD</span>
+                        </h1>
+                        <p class="text-xl font-bold mb-8 max-w-md border-l-8 border-black pl-4 py-2 bg-white">We break the rules to make things that people actually remember. Boring designs belong in the trash.</p>
+                        
+                        <div class="flex gap-4">
+                            <button class="bg-[#4D4DFF] text-white text-xl font-black uppercase tracking-wider px-8 py-4 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-y-2 hover:translate-x-2 hover:shadow-none transition-all">
+                                Hire Us
+                            </button>
+                            <button class="bg-white text-black text-xl font-black uppercase tracking-wider px-8 py-4 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-y-2 hover:translate-x-2 hover:shadow-none transition-all hover:bg-gray-200">
+                                See Work
+                            </button>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 relative">
+                        <div class="w-full aspect-square bg-[#FF90E8] border-8 border-black shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden group">
+                            <!-- abstract shape -->
+                            <div class="absolute inset-0 bg-white grid grid-cols-5 grid-rows-5 gap-2 p-2 group-hover:scale-110 transition-transform duration-500">
+                                <div class="col-span-2 row-span-3 bg-black"></div>
+                                <div class="col-span-3 row-span-2 bg-[#FFF066] border-4 border-black"></div>
+                                <div class="col-span-1 row-span-3 bg-[#4D4DFF] border-4 border-black rounded-full"></div>
+                                <div class="col-span-2 row-span-2 bg-[#FF90E8] border-4 border-black transform rotate-45 scale-75"></div>
+                                <div class="col-span-1 row-span-1 bg-black rounded-full"></div>
+                            </div>
+                            <div class="absolute bottom-4 left-4 bg-white border-4 border-black px-4 py-1 font-bold text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">Art.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- Aurora Modal -->
+    <div id="preview-aurora" class="modal">
+        <div class="modal-content aurora-bg min-h-[600px] relative overflow-hidden">
+            <button onclick="closeModal('preview-aurora')" class="absolute top-4 right-4 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-10 h-10 flex items-center justify-center transition-colors z-50">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <!-- Floating Orbs for extra mesh feel -->
+            <div class="absolute top-10 left-10 w-64 h-64 bg-pink-500/40 rounded-full blur-[80px]"></div>
+            <div class="absolute bottom-10 right-10 w-80 h-80 bg-blue-500/40 rounded-full blur-[100px]"></div>
+            
+            <div class="w-full h-full p-10 flex flex-col items-center justify-center relative z-10 text-white">
+                <div class="glass-panel p-2 rounded-full mb-8 backdrop-blur-xl bg-white/10 border border-white/20 inline-flex">
+                    <span class="px-4 py-1.5 bg-white/20 rounded-full text-sm font-medium">New Feature</span>
+                    <span class="px-4 py-1.5 text-sm">Introducing Fluid UI</span>
+                </div>
+                
+                <h1 class="text-6xl md:text-7xl font-bold text-center mb-6 max-w-3xl leading-tight">
+                    Design that moves with you.
+                </h1>
+                
+                <p class="text-xl text-white/80 text-center max-w-2xl mb-12">
+                    Experience the next generation of interfaces. Soft gradients, frosted glass, and seamless interactions that feel almost magical.
+                </p>
+                
+                <div class="flex gap-6">
+                    <button class="px-8 py-4 bg-white text-purple-700 font-bold rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.3)] hover:scale-105 transition-transform">
+                        Explore Now
+                    </button>
+                    <button class="px-8 py-4 bg-black/20 backdrop-blur-md text-white font-medium rounded-full border border-white/30 hover:bg-black/30 transition-colors">
+                        View Demo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Claymorphism Modal -->
+    <div id="preview-clay" class="modal">
+        <div class="modal-content bg-[#e2e8f0] min-h-[600px] relative">
+            <button onclick="closeModal('preview-clay')" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800 bg-white shadow-md rounded-full w-10 h-10 flex items-center justify-center transition-colors z-50">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div class="w-full h-full p-10 flex flex-col items-center justify-center">
+                <h2 class="text-3xl font-bold text-slate-700 mb-10">Smart Home Controls</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl">
+                    <!-- AC Control -->
+                    <div class="clay-box p-6 flex flex-col items-center col-span-2 md:col-span-2 row-span-2">
+                        <div class="w-full flex justify-between items-center mb-8">
+                            <span class="text-slate-600 font-bold">Living Room AC</span>
+                            <div class="w-12 h-6 bg-blue-400 rounded-full shadow-inner relative cursor-pointer">
+                                <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                            </div>
+                        </div>
+                        <div class="w-48 h-48 rounded-full border-[10px] border-[#f1f5f9] shadow-[10px_10px_20px_#cbd5e1,-10px_-10px_20px_#ffffff] flex items-center justify-center flex-col relative">
+                            <!-- Temp Ring (Fake) -->
+                            <svg class="absolute inset-0 w-full h-full -rotate-90">
+                                <circle cx="50%" cy="50%" r="42%" stroke="currentColor" stroke-width="8" fill="none" class="text-slate-200" />
+                                <circle cx="50%" cy="50%" r="42%" stroke="currentColor" stroke-width="8" fill="none" stroke-dasharray="100 100" class="text-blue-400" />
+                            </svg>
+                            <span class="text-4xl font-bold text-slate-700">22°</span>
+                            <span class="text-slate-400 text-sm">Cooling</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Light Control -->
+                    <div class="clay-box p-6 flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-yellow-100 transition-colors">
+                        <i class="fa-regular fa-lightbulb text-4xl text-yellow-500 mb-2"></i>
+                        <span class="font-bold text-slate-700">Main Light</span>
+                        <span class="text-xs text-yellow-600 font-medium bg-yellow-200 px-3 py-1 rounded-full shadow-inner">ON</span>
+                    </div>
+                    
+                    <!-- TV Control -->
+                    <div class="clay-box p-6 flex flex-col items-center justify-center gap-4 cursor-pointer">
+                        <i class="fa-solid fa-tv text-4xl text-slate-400 mb-2"></i>
+                        <span class="font-bold text-slate-700">Smart TV</span>
+                        <span class="text-xs text-slate-500 font-medium bg-slate-200 px-3 py-1 rounded-full shadow-inner">OFF</span>
+                    </div>
+
+                    <!-- Music Control -->
+                    <div class="clay-box p-6 col-span-2 flex items-center gap-4">
+                        <div class="w-16 h-16 bg-purple-300 rounded-2xl flex items-center justify-center text-white shadow-inner">
+                            <i class="fa-solid fa-music text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-700">Lo-Fi Beats</h4>
+                            <p class="text-sm text-slate-500">Playing on HomePod</p>
+                            <!-- Fake progress -->
+                            <div class="w-full h-2 bg-slate-200 rounded-full mt-2 shadow-inner overflow-hidden">
+                                <div class="w-1/3 h-full bg-purple-400 rounded-full"></div>
+                            </div>
+                        </div>
+                        <button class="w-12 h-12 bg-[#f1f5f9] rounded-full shadow-[3px_3px_6px_#cbd5e1,-3px_-3px_6px_#ffffff] flex items-center justify-center text-slate-600 active:shadow-inner transition-all">
+                            <i class="fa-solid fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Swiss Modal -->
+    <div id="preview-swiss" class="modal">
+        <div class="modal-content bg-white min-h-[600px] border border-black relative">
+            <button onclick="closeModal('preview-swiss')" class="absolute top-4 right-4 text-black bg-white border border-black hover:bg-black hover:text-white rounded-full w-12 h-12 flex items-center justify-center transition-colors z-50">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div class="w-full h-full min-h-[600px] flex flex-col p-8 md:p-16">
+                <!-- Swiss Header -->
+                <header class="flex justify-between items-start border-b border-black pb-8 mb-16">
+                    <div class="font-swiss font-bold text-xl uppercase tracking-tighter">Architecture<br>Bureau</div>
+                    <nav class="flex gap-12 font-bold text-sm">
+                        <a href="#" class="hover:underline underline-offset-4">Projects</a>
+                        <a href="#" class="hover:underline underline-offset-4">Studio</a>
+                        <a href="#" class="hover:underline underline-offset-4">Journal</a>
+                        <a href="#" class="hover:underline underline-offset-4">Contact</a>
+                    </nav>
+                </header>
+                
+                <!-- Content -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 flex-1">
+                    <div class="md:col-span-8 flex flex-col justify-between">
+                        <h1 class="font-swiss text-7xl md:text-9xl font-bold leading-[0.85] tracking-tighter uppercase">
+                            Form<br>Follows<br>Function.
+                        </h1>
+                        <div class="mt-12 text-sm font-medium border-l border-black pl-4 max-w-sm">
+                            <p>01 — We create spaces that respect the grid. Embracing raw materials, extreme minimalism, and absolute precision in every angle.</p>
+                        </div>
+                    </div>
+                    <div class="md:col-span-4 border-l border-black pl-8 flex flex-col justify-end">
+                        <img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&q=80&w=400" class="w-full h-64 object-cover grayscale mb-4" alt="Architecture">
+                        <div class="flex justify-between font-bold text-xs uppercase border-t border-black pt-2">
+                            <span>Project: Zenith</span>
+                            <span>2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retro Modal -->
+    <div id="preview-retro" class="modal">
+        <div class="modal-content bg-[#008080] min-h-[600px] relative p-4 flex flex-col">
+            <button onclick="closeModal('preview-retro')" class="absolute top-8 right-8 text-white hover:text-yellow-300 z-50 font-retro text-2xl drop-shadow-md">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <!-- Desktop Layout -->
+            <div class="flex-1 w-full relative">
+                <!-- Icons -->
+                <div class="absolute top-4 left-4 flex flex-col gap-6 w-20 items-center font-retro text-white text-[10px] text-center">
+                    <div class="cursor-pointer group">
+                        <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png" class="w-10 h-10 mx-auto mb-1 group-active:brightness-50" alt="My Computer">
+                        <span class="bg-blue-800/80 px-1 border border-transparent group-hover:border-dotted group-hover:border-white">My PC</span>
+                    </div>
+                    <div class="cursor-pointer group">
+                        <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" class="w-10 h-10 mx-auto mb-1 group-active:brightness-50" alt="Folder">
+                        <span class="bg-blue-800/80 px-1 border border-transparent group-hover:border-dotted group-hover:border-white">Projects</span>
+                    </div>
+                    <div class="cursor-pointer group">
+                        <img src="https://win98icons.alexmeub.com/icons/png/recycle_bin_empty-4.png" class="w-10 h-10 mx-auto mb-1 group-active:brightness-50" alt="Trash">
+                        <span class="bg-blue-800/80 px-1 border border-transparent group-hover:border-dotted group-hover:border-white">Trash</span>
+                    </div>
+                </div>
+
+                <!-- Open Window 1 -->
+                <div class="retro-window absolute top-20 left-32 w-[450px] shadow-lg font-retro text-black text-xs z-10">
+                    <div class="bg-blue-800 p-1 flex justify-between items-center text-white m-0.5 cursor-move">
+                        <div class="flex items-center gap-2 px-1">
+                            <img src="https://win98icons.alexmeub.com/icons/png/notepad-1.png" class="w-4 h-4" alt="icon">
+                            <span>welcome.txt - Notepad</span>
+                        </div>
+                        <div class="flex gap-0.5">
+                            <button class="retro-btn w-5 h-5 flex justify-center items-center text-black pb-1">_</button>
+                            <button class="retro-btn w-5 h-5 flex justify-center items-center text-black pb-1">□</button>
+                            <button class="retro-btn w-5 h-5 flex justify-center items-center text-black pb-1 font-bold">x</button>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-1 border-b border-gray-400">
+                        <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">File</span>
+                        <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">Edit</span>
+                        <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">Search</span>
+                        <span class="cursor-pointer hover:bg-blue-800 hover:text-white px-1">Help</span>
+                    </div>
+                    <div class="p-1">
+                        <textarea class="retro-inset w-full h-48 resize-none p-2 font-retro text-xs focus:outline-none leading-loose">
+WELCOME TO THE RETRO ZONE.
+
+This design style brings back the raw, unfiltered aesthetic of early computing. 
+No rounded corners. 
+No drop shadows. 
+Just hard lines, gray boxes, and pure nostalgia.
+
+Perfect for Web3, brutalist portfolios, or just showing off that you remember dial-up internet.
+                        </textarea>
+                    </div>
+                </div>
+
+                <!-- Open Window 2 (Overlay) -->
+                <div class="retro-window absolute top-40 left-80 w-[300px] shadow-lg font-retro text-black text-xs z-20">
+                    <div class="bg-blue-800 p-1 flex justify-between items-center text-white m-0.5 cursor-move">
+                        <div class="flex items-center gap-2 px-1">
+                            <img src="https://win98icons.alexmeub.com/icons/png/msg_information-0.png" class="w-4 h-4" alt="icon">
+                            <span>Alert</span>
+                        </div>
+                        <button class="retro-btn w-5 h-5 flex justify-center items-center text-black pb-1 font-bold">x</button>
+                    </div>
+                    <div class="p-6 flex flex-col gap-6 items-center">
+                        <div class="flex gap-4 items-center w-full">
+                            <img src="https://win98icons.alexmeub.com/icons/png/msg_information-0.png" class="w-8 h-8" alt="info">
+                            <p>You have been officially diagnosed with Nostalgia.</p>
+                        </div>
+                        <button class="retro-btn px-8 py-2 uppercase focus:border-black focus:border-dotted focus:border-2">OK</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taskbar -->
+            <div class="retro-window h-10 w-full flex items-center p-1 mt-auto font-retro text-xs gap-1 relative z-50">
+                <button class="retro-btn h-full px-2 flex items-center gap-2 font-bold active:bg-gray-300">
+                    <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" class="w-5 h-5" alt="Start">
+                    Start
+                </button>
+                <div class="border-l-2 border-gray-400 border-r-2 border-white h-full mx-1"></div>
+                <button class="retro-inset h-full px-4 flex items-center gap-2 bg-gray-300 shadow-inner">
+                    <img src="https://win98icons.alexmeub.com/icons/png/notepad-1.png" class="w-4 h-4" alt="icon">
+                    welcome.txt
+                </button>
+                <div class="ml-auto retro-inset h-full px-3 flex items-center bg-gray-300">
+                    4:20 PM
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Note: Neumorphism preview uses the inline version since it relies heavily on the specific light background color which might clash with modal overlays -->
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-10 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-slate-500 dark:text-slate-400">
+                &copy; 2026 PromptUI by Gemini. Dibuat untuk tujuan edukasi dan inspirasi.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-green-400"></i>
+        <span>Prompt disalin ke clipboard!</span>
+    </div>
+
+    <script>
+        // --- Dark Mode Logic ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        // Cek preferensi awal
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // --- Copy to Clipboard Logic ---
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            
+            // Mencoba menggunakan Clipboard API baru
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast();
+            }).catch(err => {
+                // Fallback jika API terblokir (misal di iframe tanpa permission)
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast();
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                    alert("Gagal menyalin teks.");
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // --- Modal Logic ---
+        function openPreview(modalId) {
+            const modal = document.getElementById(modalId);
+            if(modal) {
+                modal.style.display = "block";
+                document.body.style.overflow = "hidden"; // Prevent background scrolling
+            } else if (modalId === 'preview-neu') {
+                // Khusus Neumorphism tidak pakai modal terpisah, scroll ke inline saja
+                document.getElementById('neumorphism').scrollIntoView({ behavior: 'smooth' });
+                
+                // Beri efek highlight sebentar
+                const neuBox = document.querySelector('.neu-button').parentElement;
+                const originalBg = neuBox.style.backgroundColor;
+                neuBox.style.transition = 'background-color 0.5s';
+                neuBox.style.backgroundColor = 'rgba(99, 102, 241, 0.1)'; // Highlight primary color
+                setTimeout(() => {
+                    neuBox.style.backgroundColor = originalBg;
+                }, 1000);
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+            document.body.style.overflow = "auto"; // Restore background scrolling
+        }
+
+        // Tutup modal jika klik di luar konten (area gelap)
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        }
+        
+        // Esc key untuk menutup modal
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === "block") {
+                        modal.style.display = "none";
+                        document.body.style.overflow = "auto";
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
