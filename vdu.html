@@ -6,121 +6,139 @@
     <title>VDU PPKA - SIL 02 LRS Pro Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Base Reset & Lock */
+        /* Base Reset & Lock - VDU Theme (Industrial/Flat) */
         html, body { 
-            background-color: #0b0c10; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #000000; color: #d4d4d4; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             overflow: hidden; user-select: none; height: 100dvh; width: 100vw; overscroll-behavior: none;
         }
 
-        /* Landscape Overlay for Mobile (Portrait Block) */
         #landscape-overlay { display: none; z-index: 9999; }
         @media (max-width: 900px) and (orientation: portrait) {
             #app-root { display: none !important; } #landscape-overlay { display: flex !important; }
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #45a29e; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #66fcf1; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #555; }
 
-        /* Panel UI - HORIZONTAL SCROLL FIX UNTUK HP */
+        /* Panel UI - FLAT & SOLID */
         .panel-container { 
-            display: flex; 
-            flex-wrap: nowrap; /* Jangan bungkus ke baris baru */
-            overflow-x: auto;  /* Bisa di-swipe horizontal */
-            gap: 6px; 
-            padding: 6px; 
-            background: linear-gradient(180deg, #1f2833 0%, #11151c 100%); 
-            border-bottom: 2px solid #000; 
-            scrollbar-width: thin;
+            display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4px; padding: 4px; 
+            background-color: #1a1a1a; 
+            border-bottom: 2px solid #333; scrollbar-width: thin;
         }
         .panel-group { 
-            background: rgba(0, 0, 0, 0.4); border: 1px solid #334; border-radius: 6px; 
-            padding: 4px 6px; display: flex; flex-direction: column; gap: 6px; 
-            box-shadow: inset 0 1px 3px rgba(255,255,255,0.05); flex-shrink: 0; /* Cegah mengecil */
+            background-color: #0f0f0f; border: 1px solid #333; border-radius: 2px; 
+            padding: 4px 6px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;
         }
-        .panel-header { font-size: 10px; text-align: center; color: #45a29e; text-transform: uppercase; border-bottom: 1px solid #334; padding-bottom: 3px; font-weight: bold; letter-spacing: 0.5px; white-space: nowrap; }
+        .panel-header { font-size: 10px; text-align: center; color: #aaa; border-bottom: 1px solid #333; padding-bottom: 2px; font-weight: normal; letter-spacing: 0.5px; white-space: nowrap; }
 
-        /* 3D Button Styling */
-        .btn-sil { font-size: 10px; font-weight: bold; padding: 4px; border-radius: 4px; border: 1px solid #000; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 42px; height: 32px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.6); user-select: none; transition: all 0.1s; text-shadow: 1px 1px 1px rgba(0,0,0,0.8); white-space: nowrap; }
-        .btn-sil:active { box-shadow: inset 0 2px 4px rgba(0,0,0,0.8), 0 0 0 rgba(0,0,0,0); transform: translateY(2px); }
-        .bg-sys { background: linear-gradient(180deg, #666, #444); color: #fff; }
-        .bg-sig { background: linear-gradient(180deg, #c00, #800); color: #fff; }
-        .bg-route { background: linear-gradient(180deg, #0a0, #060); color: #fff; }
-        .bg-block { background: linear-gradient(180deg, #808, #505); color: #fff; }
-        .bg-wesel { background: linear-gradient(180deg, #04c, #028); color: #fff; }
-        .bg-power { background: linear-gradient(180deg, #088, #055); color: #fff; }
+        /* Flat Industrial Buttons */
+        .btn-sil { font-size: 10px; font-weight: bold; padding: 4px; border-radius: 2px; border: 1px solid #444; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 42px; height: 32px; user-select: none; transition: background 0.1s; white-space: nowrap; color: #ccc; background-color: #222; }
+        .btn-sil:active { transform: scale(0.95); background-color: #111; }
+        
+        .bg-sys { background-color: #333; color: #fff; }
+        .bg-sig { background-color: #800000; color: #fff; border-color: #a00; }
+        .bg-route { background-color: #004d00; color: #fff; border-color: #060; }
+        .bg-block { background-color: #4b0082; color: #fff; border-color: #60a; }
+        .bg-wesel { background-color: #003366; color: #fff; border-color: #048; }
 
-        /* Indicators */
-        .bg-indicator-on { background: linear-gradient(180deg, #2f2, #0a0) !important; color: #000 !important; text-shadow: none; box-shadow: 0 0 8px #0f0, inset 0 1px 2px rgba(255,255,255,0.5) !important; border-color: #0f0; }
-        .bg-indicator-warn { background: linear-gradient(180deg, #ff0, #a80) !important; color: #000 !important; text-shadow: none; box-shadow: 0 0 8px #ff0, inset 0 1px 2px rgba(255,255,255,0.5) !important; border-color: #ff0; }
-        .bg-indicator-err { background: linear-gradient(180deg, #f00, #a00) !important; color: #fff !important; box-shadow: 0 0 10px #f00, inset 0 1px 2px rgba(255,255,255,0.5) !important; border-color: #f00; }
-        @keyframes blink { 50% { opacity: 0.3; box-shadow: none; } }
+        /* Indicators - Solid Colors, NO GLOW (Performance Boost) */
+        .bg-indicator-on { background-color: #00ff00 !important; color: #000 !important; border-color: #00ff00; }
+        .bg-indicator-warn { background-color: #ffff00 !important; color: #000 !important; border-color: #ffff00; }
+        .bg-indicator-err { background-color: #ff0000 !important; color: #fff !important; border-color: #ff0000; }
+        
+        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.2; } }
         .blinking { animation: blink 0.8s infinite; }
 
-        /* SVG Canvas & Tracks */
-        #canvas-container { background: radial-gradient(ellipse at center, #111a1f 0%, #05080a 100%); overflow: hidden; flex: 1 1 auto; min-height: 0; }
+        /* SVG Canvas & Tracks - REMOVED SVG FILTERS (Performance Boost) */
+        #canvas-container { background-color: #080a0c; overflow: hidden; flex: 1 1 auto; min-height: 0; }
         #main-svg { cursor: grab; touch-action: none; width: 100%; height: 100%; }
         #main-svg.panning { cursor: grabbing; }
 
-        .track { stroke-width: 4; stroke-linecap: square; transition: stroke 0.3s; fill: none; pointer-events: none; }
+        .track { stroke-width: 4; stroke-linecap: square; transition: stroke 0.1s; fill: none; pointer-events: none; }
         .track-bg { stroke: #222; }
-        .track-normal { stroke: #a3c2c2; }
-        .track-locked { stroke: #0f0; filter: drop-shadow(0 0 3px #0f0); }
-        .track-occupied { stroke: #f00; filter: drop-shadow(0 0 3px #f00); }
+        .track-normal { stroke: #5c7e80; }
+        .track-locked { stroke: #00ff00; } /* No drop-shadow */
+        .track-occupied { stroke: #ff0000; } /* No drop-shadow */
         
-        .track-bed { fill: none; stroke: #222; stroke-width: 16; pointer-events: none; stroke-linecap: round; stroke-linejoin: round;}
-        .track-sleeper { fill: none; stroke: #444; stroke-width: 12; stroke-dasharray: 4 8; pointer-events: none; stroke-linecap: butt;}
+        .track-bed { fill: none; stroke: #1a1a1a; stroke-width: 16; pointer-events: none; stroke-linecap: round; stroke-linejoin: round;}
+        .track-sleeper { fill: none; stroke: #333; stroke-width: 12; stroke-dasharray: 4 8; pointer-events: none; stroke-linecap: butt;}
 
         .hit-area { fill: none; stroke: rgba(0,0,0,0.01); stroke-width: 25; cursor: pointer; pointer-events: stroke; }
         .hit-area-circle { fill: rgba(0,0,0,0.01); cursor: pointer; pointer-events: all; }
 
-        .signal-head { stroke: #fff; stroke-width: 1.5; transition: fill 0.3s; }
-        .sig-red { fill: #ff0000; filter: drop-shadow(0 0 3px #f00); }
-        .sig-green { fill: #00ff00; filter: drop-shadow(0 0 3px #0f0); }
+        .signal-head { stroke: #fff; stroke-width: 1; transition: fill 0.1s; }
+        .sig-red { fill: #ff0000; } /* No drop-shadow */
+        .sig-green { fill: #00ff00; } /* No drop-shadow */
 
-        .text-vdu { fill: #c5c6c7; font-size: 12px; pointer-events: none; font-weight: bold; }
-        .text-wesel { fill: #66fcf1; font-size: 13px; font-weight: bold; cursor: pointer; pointer-events: all; }
-        .text-wesel:hover { fill: #fff; filter: drop-shadow(0 0 3px #0ff); }
-        .train-marker { filter: drop-shadow(0 0 4px rgba(0,0,0,0.9)); }
-        .train-label { font-size: 11px; font-weight: bold; pointer-events: none; font-family: monospace; }
+        .text-vdu { fill: #aaa; font-size: 12px; pointer-events: none; font-family: monospace; font-weight: normal; }
+        .text-wesel { fill: #5cc2bb; font-size: 13px; font-family: monospace; cursor: pointer; pointer-events: all; }
+        .text-wesel:hover { fill: #fff; }
+        
+        /* Train Marker (No Filter) */
+        .train-marker { stroke-width: 1.5; }
+        .train-label { font-size: 11px; pointer-events: none; font-family: monospace; background: black; }
 
-        /* Terminal Console */
-        #status-bar { background-color: #030a05; border-top: 2px solid #1f2833; padding: 8px 12px; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #4af626; overflow-y: auto; text-shadow: 0 0 4px rgba(74,246,38,0.4); flex: 0 0 14dvh; min-height: 50px; }
+        /* Terminal Console - Flat */
+        #status-bar { background-color: #000; border-top: 1px solid #333; padding: 6px 10px; font-family: monospace; font-size: 11px; color: #00ff00; overflow-y: auto; flex: 0 0 14dvh; min-height: 50px; }
 
         /* Controls */
         .zoom-ctrl { position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 4px; z-index: 20; }
-        .zoom-btn { width: 32px; height: 32px; background: rgba(31,40,51,0.9); border: 1px solid #45a29e; color: #fff; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 6px; backdrop-filter: blur(2px); transition: 0.1s; }
-        .zoom-btn:active { background: #45a29e; color: #000; transform: scale(0.95); }
-        .fs-btn { position: absolute; top: 12px; right: 12px; z-index: 20; background: rgba(31,40,51,0.9); border: 1px solid #45a29e; color: #66fcf1; font-size: 11px; font-weight: bold; padding: 6px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(2px); }
+        .zoom-btn { width: 32px; height: 32px; background-color: #222; border: 1px solid #555; color: #aaa; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; transition: 0.1s; }
+        .zoom-btn:active { background-color: #555; color: #fff; transform: scale(0.95); }
+        .fs-btn { position: absolute; top: 12px; right: 12px; z-index: 20; background-color: #222; border: 1px solid #555; color: #aaa; font-size: 10px; padding: 6px 10px; border-radius: 2px; cursor: pointer; }
 
         /* PA System */
-        .mic-btn { width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #e63946, #990000); border: 2px solid #ff9999; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.5); font-size: 10px; font-weight: bold; color: #fff; transition: transform 0.1s; flex-shrink: 0; }
-        .mic-btn.recording { background: radial-gradient(circle at 30% 30%, #ff4d4d, #cc0000); animation: blink 0.6s infinite; box-shadow: 0 0 15px rgba(255,0,0,0.9); border-color: #fff; }
+        .mic-btn { width: 40px; height: 40px; border-radius: 50%; background-color: #800000; border: 2px solid #555; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size: 10px; color: #fff; transition: transform 0.1s; flex-shrink: 0; }
+        .mic-btn.recording { background-color: #ff0000; border-color: #fff; }
         .mic-btn:active { transform: scale(0.9); }
-        .pa-meter { width: 100%; height: 6px; background:#111; border:1px solid #333; border-radius:3px; overflow:hidden; margin-top:4px; }
-        .pa-meter-fill { height:100%; width:0%; background:linear-gradient(90deg,#0f0,#ff0,#f00); transition: width 0.08s linear; }
+        .pa-meter { width: 100%; height: 6px; background:#111; border:1px solid #333; overflow:hidden; margin-top:4px; }
+        .pa-meter-fill { height:100%; width:0%; background-color: #00ff00; transition: width 0.08s linear; }
 
-        .btn-ai { background: linear-gradient(180deg, #6a0572, #3a0ca3); color: #fff; }
-        @media (max-width: 768px) { #status-bar { font-size: 10px; } }
+        .btn-ai { background-color: #1a1a1a; color: #888; border-color: #444; }
+        
+        /* Modal Override (No blur, solid background) */
+        .modal-bg { background-color: rgba(0, 0, 0, 0.95); }
+        .modal-box { background-color: #111; border: 1px solid #444; }
     </style>
 </head>
 <body class="flex flex-col h-[100dvh] w-screen">
 
-    <!-- LANDSCAPE OVERLAY (Shows only on Portrait Mobile) -->
-    <div id="landscape-overlay" class="fixed inset-0 bg-gray-900 flex-col items-center justify-center text-center p-6 text-white">
-        <svg class="w-20 h-20 text-blue-400 mb-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- LANDSCAPE OVERLAY -->
+    <div id="landscape-overlay" class="fixed inset-0 bg-black flex-col items-center justify-center text-center p-6 text-white">
+        <svg class="w-16 h-16 text-gray-400 mb-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
         </svg>
-        <h2 class="text-2xl font-bold mb-3">Mode Portrait Terdeteksi</h2>
-        <p class="text-gray-300 text-sm max-w-sm"><span class="text-blue-300 font-bold">Harap putar HP Anda ke posisi Miring</span> untuk menggunakan simulator ini.</p>
+        <h2 class="text-xl font-mono mb-3">MODE PORTRAIT</h2>
+        <p class="text-gray-400 text-xs font-mono max-w-sm">PUTAR PERANGKAT KE POSISI LANDSCAPE UNTUK MELANJUTKAN.</p>
+    </div>
+
+    <!-- IDENTITAS PETUGAS OVERLAY -->
+    <div id="login-modal" class="fixed inset-0 modal-bg z-[10000] flex flex-col items-center justify-center p-4">
+        <div class="modal-box rounded p-6 max-w-sm w-full text-center">
+            <h2 class="text-[#ccc] text-xl font-mono mb-2 border-b border-gray-700 pb-2">SYSTEM LOGIN</h2>
+            <p class="text-[10px] text-gray-500 mb-6 font-mono">VDU SIL-02 TERMINAL ACCESS</p>
+            
+            <div class="space-y-4 text-left font-mono">
+                <div>
+                    <label class="block text-gray-400 text-[10px] mb-1">NAMA DISCORD</label>
+                    <input type="text" id="input-discord" class="w-full bg-black border border-gray-600 rounded-sm px-3 py-2 text-green-400 text-xs focus:outline-none focus:border-green-500" placeholder="user#1234" autocomplete="off">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-[10px] mb-1">NAMA ROBLOX</label>
+                    <input type="text" id="input-roblox" class="w-full bg-black border border-gray-600 rounded-sm px-3 py-2 text-green-400 text-xs focus:outline-none focus:border-green-500" placeholder="PlayerOne" autocomplete="off">
+                </div>
+            </div>
+            
+            <button onclick="startGame()" class="mt-8 w-full px-4 py-2 bg-[#222] hover:bg-[#333] text-white rounded-sm border border-gray-500 transition font-mono text-xs">OTORISASI AKSES</button>
+        </div>
     </div>
 
     <!-- MAIN APP WRAPPER -->
     <div id="app-root" class="flex flex-col h-full w-full">
 
-        <!-- TOP PANEL (Sekarang bisa digeser kanan/kiri di HP agar tidak makan layar) -->
+        <!-- TOP PANEL -->
         <div class="panel-container flex-none">
             <div class="panel-group">
                 <div class="panel-header">SISTEM</div>
@@ -147,9 +165,9 @@
                 <div class="panel-header">RUTE & WESEL</div>
                 <div class="flex gap-1 h-full items-center">
                     <div class="btn-sil bg-route" onclick="interlocking.startRouteSet()">MSK</div>
-                    <div class="btn-sil" style="background: linear-gradient(180deg, #07b, #047); color:#fff;" onclick="interlocking.startDepartureSet()">KLR</div>
-                    <div class="btn-sil bg-route" style="background: linear-gradient(180deg, #2a2, #171);" onclick="interlocking.executeTPR()">TPR</div>
-                    <div class="w-1 border-l border-gray-600 mx-1 h-full"></div>
+                    <div class="btn-sil bg-wesel" onclick="interlocking.startDepartureSet()">KLR</div>
+                    <div class="btn-sil bg-route" style="background-color: #003300;" onclick="interlocking.executeTPR()">TPR</div>
+                    <div class="w-[1px] bg-gray-600 mx-1 h-full"></div>
                     <div class="btn-sil bg-wesel" onclick="interlocking.toggleWesel('W11')">W11</div>
                     <div class="btn-sil bg-wesel" onclick="interlocking.toggleWesel('W13')">W13</div>
                     <div class="btn-sil bg-wesel" onclick="interlocking.toggleWesel('W12')">W12</div>
@@ -158,7 +176,7 @@
             </div>
 
             <div class="panel-group">
-                <div class="panel-header">BLOK BARAT</div>
+                <div class="panel-header">BLOK B</div>
                 <div class="flex gap-1">
                     <div class="btn-sil bg-block" onclick="blockSystem.requestBlock('Barat')">MINTA</div>
                     <div class="btn-sil bg-block" onclick="blockSystem.grantBlock('Barat')">BERI</div>
@@ -167,7 +185,7 @@
             </div>
 
             <div class="panel-group">
-                <div class="panel-header">BLOK TIMUR</div>
+                <div class="panel-header">BLOK C</div>
                 <div class="flex gap-1">
                     <div class="btn-sil bg-block" onclick="blockSystem.requestBlock('Timur')">MINTA</div>
                     <div class="btn-sil bg-block" onclick="blockSystem.grantBlock('Timur')">BERI</div>
@@ -176,16 +194,16 @@
             </div>
 
             <div class="panel-group">
-                <div class="panel-header">OTOMATISASI</div>
+                <div class="panel-header">AUTO</div>
                 <div class="flex gap-1 h-full items-center">
-                    <div id="btn-autopilot" class="btn-sil btn-ai min-w-[70px]" onclick="autoPilot.toggle()">AI NONAKTIF</div>
+                    <div id="btn-autopilot" class="btn-sil btn-ai min-w-[50px]" onclick="autoPilot.toggle()">AI OFF</div>
                 </div>
             </div>
 
             <div class="panel-group">
-                <div class="panel-header">MIC (PA)</div>
-                <div class="flex flex-col items-center gap-1 min-w-[70px] px-2">
-                    <div id="mic-btn" class="mic-btn" title="Tahan untuk bicara">MIC</div>
+                <div class="panel-header">MIC</div>
+                <div class="flex flex-col items-center gap-1 min-w-[50px] px-2">
+                    <div id="mic-btn" class="mic-btn" title="Tahan untuk bicara">PA</div>
                     <div class="pa-meter"><div id="pa-meter-fill" class="pa-meter-fill"></div></div>
                 </div>
             </div>
@@ -200,22 +218,22 @@
                 <div class="zoom-btn text-[10px]" onclick="zoomPan.reset()">RST</div>
             </div>
 
-            <div class="fs-btn" id="btn-fullscreen" onclick="ui.toggleFullscreen()">LAYAR PENUH</div>
+            <div class="fs-btn" id="btn-fullscreen" onclick="ui.toggleFullscreen()">FULLSCREEN</div>
 
-            <div class="absolute top-4 right-20 md:right-32 text-right z-10 drop-shadow-md pointer-events-none">
-                <div id="clock-display" class="text-xl md:text-2xl font-bold tracking-widest text-[#66fcf1]">00:00:00</div>
-                <div class="text-lg md:text-xl font-bold tracking-widest text-white mt-1">STASIUN A</div>
+            <div class="absolute top-4 right-20 md:right-32 text-right z-10 drop-shadow-md pointer-events-none font-mono">
+                <div id="clock-display" class="text-xl md:text-2xl text-gray-300">00:00:00</div>
+                <div class="text-sm md:text-md text-gray-500 mt-1">STASIUN A</div>
             </div>
 
-            <div id="ui-overlay" class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-6 py-2 font-bold rounded shadow-lg hidden blinking text-xs md:text-sm text-center z-10 border-2 border-yellow-300 pointer-events-none"></div>
+            <div id="ui-overlay" class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-yellow-600 text-black px-6 py-2 rounded-sm hidden blinking text-xs md:text-sm font-mono text-center z-10 pointer-events-none"></div>
 
             <svg id="main-svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1200 500">
                 <defs>
                     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.02" stroke-width="1"/>
                     </pattern>
                     <pattern id="canopyHatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                        <line x1="0" y1="0" x2="0" y2="10" stroke="#555" stroke-width="2"/>
+                        <line x1="0" y1="0" x2="0" y2="10" stroke="#333" stroke-width="2"/>
                     </pattern>
                 </defs>
                 
@@ -224,15 +242,15 @@
                 <g id="viewport-group">
 
                     <!-- Dekorasi Peron & Gedung -->
-                    <rect x="395" y="368" width="410" height="16" fill="#222" stroke="#444" stroke-width="1"/>
-                    <rect x="395" y="368" width="410" height="16" fill="url(#canopyHatch)" opacity="0.6"/>
-                    <text x="600" y="398" text-anchor="middle" class="text-vdu" style="font-size:9px;">PERON 1</text>
+                    <rect x="395" y="368" width="410" height="12" fill="#111"/>
+                    <rect x="395" y="368" width="410" height="12" fill="url(#canopyHatch)" opacity="0.8"/>
+                    <text x="600" y="395" text-anchor="middle" class="text-vdu" style="font-size:9px;">PERON 1</text>
 
-                    <rect x="395" y="96" width="410" height="16" fill="#222" stroke="#444" stroke-width="1"/>
-                    <rect x="395" y="96" width="410" height="16" fill="url(#canopyHatch)" opacity="0.6"/>
+                    <rect x="395" y="100" width="410" height="12" fill="#111"/>
+                    <rect x="395" y="100" width="410" height="12" fill="url(#canopyHatch)" opacity="0.8"/>
                     <text x="600" y="92" text-anchor="middle" class="text-vdu" style="font-size:9px;">PERON 2</text>
 
-                    <!-- STATIC TRACK BED & SLEEPERS (CURVED) -->
+                    <!-- STATIC TRACK BED & SLEEPERS -->
                     <g pointer-events="none">
                         <g class="track-bed">
                             <path d="M 100 280 L 1100 280" /> <!-- J2 Main -->
@@ -254,11 +272,11 @@
                     <path class="hit-area" d="M 400 120 L 800 120" onclick="interlocking.trackClicked('J4')" />
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J4','Barat')">
                         <circle class="hit-area-circle" cx="420" cy="120" r="16" />
-                        <circle id="sig-J4-Klr-Brt" cx="420" cy="120" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J4-Klr-Brt" cx="420" cy="120" r="6" class="signal-head sig-red" />
                     </g>
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J4','Timur')">
                         <circle class="hit-area-circle" cx="780" cy="120" r="16" />
-                        <circle id="sig-J4-Klr-Tmr" cx="780" cy="120" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J4-Klr-Tmr" cx="780" cy="120" r="6" class="signal-head sig-red" />
                     </g>
 
                     <!-- JALUR 3 -->
@@ -267,11 +285,11 @@
                     <path class="hit-area" d="M 400 200 L 800 200" onclick="interlocking.trackClicked('J3')" />
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J3','Barat')">
                         <circle class="hit-area-circle" cx="420" cy="200" r="16" />
-                        <circle id="sig-J3-Klr-Brt" cx="420" cy="200" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J3-Klr-Brt" cx="420" cy="200" r="6" class="signal-head sig-red" />
                     </g>
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J3','Timur')">
                         <circle class="hit-area-circle" cx="780" cy="200" r="16" />
-                        <circle id="sig-J3-Klr-Tmr" cx="780" cy="200" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J3-Klr-Tmr" cx="780" cy="200" r="6" class="signal-head sig-red" />
                     </g>
 
                     <!-- JALUR 2 -->
@@ -280,11 +298,11 @@
                     <path class="hit-area" d="M 400 280 L 800 280" onclick="interlocking.trackClicked('J2')" />
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J2','Barat')">
                         <circle class="hit-area-circle" cx="420" cy="280" r="16" />
-                        <circle id="sig-J2-Klr-Brt" cx="420" cy="280" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J2-Klr-Brt" cx="420" cy="280" r="6" class="signal-head sig-red" />
                     </g>
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J2','Timur')">
                         <circle class="hit-area-circle" cx="780" cy="280" r="16" />
-                        <circle id="sig-J2-Klr-Tmr" cx="780" cy="280" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J2-Klr-Tmr" cx="780" cy="280" r="6" class="signal-head sig-red" />
                     </g>
 
                     <!-- JALUR 1 -->
@@ -293,66 +311,66 @@
                     <path class="hit-area" d="M 400 360 L 800 360" onclick="interlocking.trackClicked('J1')" />
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J1','Barat')">
                         <circle class="hit-area-circle" cx="420" cy="360" r="16" />
-                        <circle id="sig-J1-Klr-Brt" cx="420" cy="360" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J1-Klr-Brt" cx="420" cy="360" r="6" class="signal-head sig-red" />
                     </g>
                     <g class="cursor-pointer" onclick="interlocking.selectExit('J1','Timur')">
                         <circle class="hit-area-circle" cx="780" cy="360" r="16" />
-                        <circle id="sig-J1-Klr-Tmr" cx="780" cy="360" r="7" class="signal-head sig-red" />
+                        <circle id="sig-J1-Klr-Tmr" cx="780" cy="360" r="6" class="signal-head sig-red" />
                     </g>
 
                     <!-- BLOK LUAR BARAT -->
-                    <text x="50" y="230" class="text-vdu font-bold text-yellow-500">&lt; BLOK STASIUN B</text>
+                    <text x="50" y="230" class="text-vdu" style="color: #888;">&lt; BLOK B</text>
                     <path id="trk-App-B-Up" d="M 100 280 L 250 280" class="track track-normal" />
                     <path id="trk-App-B-Dn" d="M 100 200 L 250 200" class="track track-normal" />
 
                     <g class="cursor-pointer" onclick="interlocking.selectOrigin('B-Up')">
                         <circle class="hit-area-circle" cx="200" cy="280" r="20" />
-                        <circle id="sig-Msk-B-Up" cx="200" cy="280" r="9" class="signal-head sig-red" />
-                        <text x="180" y="310" class="text-vdu">A (Msk)</text>
+                        <circle id="sig-Msk-B-Up" cx="200" cy="280" r="8" class="signal-head sig-red" />
+                        <text x="180" y="305" class="text-vdu" style="font-size:10px;">A(M)</text>
                     </g>
                     <g class="cursor-pointer" onclick="interlocking.selectOrigin('B-Dn')">
                         <circle class="hit-area-circle" cx="200" cy="200" r="20" />
-                        <circle id="sig-Msk-B-Dn" cx="200" cy="200" r="9" class="signal-head sig-red" />
-                        <text x="180" y="175" class="text-vdu">B (Msk)</text>
+                        <circle id="sig-Msk-B-Dn" cx="200" cy="200" r="8" class="signal-head sig-red" />
+                        <text x="180" y="175" class="text-vdu" style="font-size:10px;">B(M)</text>
                     </g>
 
                     <!-- BLOK LUAR TIMUR -->
-                    <text x="1000" y="230" class="text-vdu font-bold text-yellow-500">BLOK STASIUN C &gt;</text>
+                    <text x="1050" y="230" class="text-vdu" style="color: #888;">BLOK C &gt;</text>
                     <path id="trk-App-C-Up" d="M 950 280 L 1100 280" class="track track-normal" />
                     <path id="trk-App-C-Dn" d="M 950 200 L 1100 200" class="track track-normal" />
 
                     <g class="cursor-pointer" onclick="interlocking.selectOrigin('C-Up')">
                         <circle class="hit-area-circle" cx="1000" cy="280" r="20" />
-                        <circle id="sig-Msk-C-Up" cx="1000" cy="280" r="9" class="signal-head sig-red" />
-                        <text x="980" y="310" class="text-vdu">C (Msk)</text>
+                        <circle id="sig-Msk-C-Up" cx="1000" cy="280" r="8" class="signal-head sig-red" />
+                        <text x="980" y="305" class="text-vdu" style="font-size:10px;">C(M)</text>
                     </g>
                     <g class="cursor-pointer" onclick="interlocking.selectOrigin('C-Dn')">
                         <circle class="hit-area-circle" cx="1000" cy="200" r="20" />
-                        <circle id="sig-Msk-C-Dn" cx="1000" cy="200" r="9" class="signal-head sig-red" />
-                        <text x="980" y="175" class="text-vdu">D (Msk)</text>
+                        <circle id="sig-Msk-C-Dn" cx="1000" cy="200" r="8" class="signal-head sig-red" />
+                        <text x="980" y="175" class="text-vdu" style="font-size:10px;">D(M)</text>
                     </g>
 
-                    <!-- WESEL BARAT MELENGKUNG -->
-                    <text x="280" y="265" class="text-wesel" onclick="interlocking.toggleWesel('W11')">[W11]</text>
+                    <!-- WESEL BARAT -->
+                    <text x="280" y="265" class="text-wesel" onclick="interlocking.toggleWesel('W11')">W11</text>
                     <path id="trk-W11-N" d="M 250 280 L 400 280" class="track track-normal" />
                     <path id="trk-W11-R" d="M 250 280 C 325 280, 325 360, 400 360" class="track track-bg" />
                     <path class="hit-area" d="M 250 280 L 400 280" onclick="interlocking.toggleWesel('W11')" />
                     <path class="hit-area" d="M 250 280 C 325 280, 325 360, 400 360" onclick="interlocking.toggleWesel('W11')" />
 
-                    <text x="280" y="185" class="text-wesel" onclick="interlocking.toggleWesel('W13')">[W13]</text>
+                    <text x="280" y="185" class="text-wesel" onclick="interlocking.toggleWesel('W13')">W13</text>
                     <path id="trk-W13-N" d="M 250 200 L 400 200" class="track track-normal" />
                     <path id="trk-W13-R" d="M 250 200 C 325 200, 325 120, 400 120" class="track track-bg" />
                     <path class="hit-area" d="M 250 200 L 400 200" onclick="interlocking.toggleWesel('W13')" />
                     <path class="hit-area" d="M 250 200 C 325 200, 325 120, 400 120" onclick="interlocking.toggleWesel('W13')" />
 
-                    <!-- WESEL TIMUR MELENGKUNG -->
-                    <text x="890" y="265" class="text-wesel" onclick="interlocking.toggleWesel('W12')">[W12]</text>
+                    <!-- WESEL TIMUR -->
+                    <text x="890" y="265" class="text-wesel" onclick="interlocking.toggleWesel('W12')">W12</text>
                     <path id="trk-W12-N" d="M 800 280 L 950 280" class="track track-normal" />
                     <path id="trk-W12-R" d="M 800 360 C 875 360, 875 280, 950 280" class="track track-bg" />
                     <path class="hit-area" d="M 800 280 L 950 280" onclick="interlocking.toggleWesel('W12')" />
                     <path class="hit-area" d="M 800 360 C 875 360, 875 280, 950 280" onclick="interlocking.toggleWesel('W12')" />
 
-                    <text x="890" y="185" class="text-wesel" onclick="interlocking.toggleWesel('W14')">[W14]</text>
+                    <text x="890" y="185" class="text-wesel" onclick="interlocking.toggleWesel('W14')">W14</text>
                     <path id="trk-W14-N" d="M 800 200 L 950 200" class="track track-normal" />
                     <path id="trk-W14-R" d="M 800 120 C 875 120, 875 200, 950 200" class="track track-bg" />
                     <path class="hit-area" d="M 800 200 L 950 200" onclick="interlocking.toggleWesel('W14')" />
@@ -361,18 +379,35 @@
                 </g>
             </svg>
 
-            <!-- Float Action Button Bottom Right -->
+            <!-- Normalize Btn -->
             <div class="absolute bottom-4 right-4 z-10">
-                <button class="bg-[#1f2833]/90 hover:bg-[#45a29e] text-[#66fcf1] hover:text-black font-bold py-2 px-4 rounded border border-[#45a29e] transition shadow-lg backdrop-blur-sm text-[10px] md:text-xs" onclick="simulator.clearTracks()">NORMALISASI</button>
+                <button class="bg-[#111] hover:bg-[#222] text-gray-300 font-mono py-1 px-3 rounded-sm border border-[#444] text-[10px]" onclick="simulator.clearTracks()">NORMALISASI JALUR</button>
             </div>
         </div>
 
         <!-- BOTTOM TERMINAL LOG -->
-        <div id="status-bar" class="w-full flex flex-col gap-1">
-            <div><span class="text-white">SYS></span> INISIALISASI VDU SIL-02 BERHASIL. FITUR PENUH AKTIF.</div>
-            <div><span class="text-white">SYS></span> AI PPKA, BLOK SISTEM, & PA ANNOUNCER SIAP DIGUNAKAN.</div>
+        <div id="status-bar" class="w-full flex flex-col">
+            <div><span class="text-gray-500">SYS></span> MENUNGGU OTORISASI...</div>
         </div>
 
+    </div>
+
+    <!-- POPUP LAPORAN AKHIR DINAS -->
+    <div id="shift-report-modal" class="fixed inset-0 modal-bg z-[9999] hidden flex-col items-center justify-center p-4">
+        <div class="modal-box p-6 max-w-md w-full">
+            <div class="text-center border-b border-gray-600 pb-3 mb-4">
+                <h2 class="text-gray-300 text-lg font-mono">EXPORT LOG REPORT</h2>
+            </div>
+            
+            <div id="report-content" class="text-xs font-mono text-gray-400 space-y-2 mb-6">
+                <!-- Auto fill -->
+            </div>
+            
+            <div class="flex justify-between gap-3 font-mono text-xs">
+                <button onclick="document.getElementById('shift-report-modal').classList.add('hidden')" class="px-4 py-2 bg-[#222] text-gray-300 border border-[#444]">TUTUP</button>
+                <button onclick="window.print()" class="px-4 py-2 bg-[#004d00] text-white border border-[#006600]">CETAK / SIMPAN PDF</button>
+            </div>
+        </div>
     </div>
 
     <!-- AUDIO -->
@@ -384,12 +419,12 @@
             log: function(msg, level="info") {
                 const term = document.getElementById('status-bar');
                 const time = new Date().toLocaleTimeString('id-ID', { hour12: false });
-                let color = level === 'err' ? '#ff4d4d' : level === 'warn' ? '#ffcc00' : '#4af626';
-                term.innerHTML += `<div style="color:${color}"><span class="text-gray-400">[${time}]</span> ${msg}</div>`;
+                let color = level === 'err' ? '#ff4d4d' : level === 'warn' ? '#ffff00' : '#00ff00';
+                term.innerHTML += `<div style="color:${color}; margin-bottom:2px;"><span style="color:#555">[${time}]</span> ${msg}</div>`;
                 term.scrollTop = term.scrollHeight;
             },
             triggerAlarm: function(msg) {
-                this.log(`ALARM: ${msg}`, 'err');
+                this.log(`ALRM: ${msg}`, 'err');
                 document.getElementById('btn-buzzer').classList.add('bg-indicator-err');
                 try {
                     let ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -400,36 +435,136 @@
             },
             ackBuzzer: function() {
                 document.getElementById('btn-buzzer').classList.remove('bg-indicator-err');
-                this.log("Buzzer di-Acknowledge oleh PPKA.");
+                this.log("Buzzer di-ACK.");
             },
             toggleBel: function() {
                 const audio = document.getElementById('bel-audio');
                 const btn = document.getElementById('btn-bel');
                 if (audio.paused) {
-                    audio.currentTime = 0; audio.play().catch(e => this.log(`Gagal memutar bel: ${e.message}`, 'err'));
+                    audio.currentTime = 0; audio.play().catch(e => this.log(`Err bel: ${e.message}`, 'err'));
                     btn.innerHTML = 'BEL ON'; btn.classList.add('bg-indicator-warn', 'blinking');
-                    this.log('Bel diaktifkan (mode loop).', 'warn');
+                    this.log('Bel peron ON.', 'warn');
                 } else {
                     audio.pause(); audio.currentTime = 0;
                     btn.innerHTML = 'BEL OFF'; btn.classList.remove('bg-indicator-warn', 'blinking');
-                    this.log('Bel dimatikan.');
+                    this.log('Bel peron OFF.');
                 }
             },
             selectPC: function(n) {
                 document.getElementById('btn-pc1').classList.toggle('bg-indicator-on', n === 1);
                 document.getElementById('btn-pc2').classList.toggle('bg-indicator-on', n === 2);
-            },
-            updateClock: function() { document.getElementById('clock-display').innerText = new Date().toLocaleTimeString('id-ID', { hour12: false }); }
+            }
         };
-        setInterval(system.updateClock, 1000);
+        setInterval(() => {
+            document.getElementById('clock-display').innerText = new Date().toLocaleTimeString('id-ID', { hour12: false });
+        }, 1000);
+
+        // ================= SHIFT & STATS =================
+        const shiftStats = {
+            targetTrains: 30, // Test ganti angka kecil kalo mau instan (e.g., 2)
+            servedTrains: 0,
+            delayedTrains: 0,
+            startTime: null,
+            reloadCount: 0,
+            discordName: "",
+            robloxName: "",
+            
+            init: function() {
+                let isReload = false;
+                if (window.performance && performance.getEntriesByType) {
+                    const navEntries = performance.getEntriesByType("navigation");
+                    if (navEntries.length > 0 && navEntries[0].type === "reload") isReload = true;
+                } else if (performance.navigation && performance.navigation.type === 1) {
+                    isReload = true;
+                }
+
+                let currentReloads = parseInt(sessionStorage.getItem('vdu_reloads')) || 0;
+                if (isReload) {
+                    currentReloads++;
+                    sessionStorage.setItem('vdu_reloads', currentReloads);
+                }
+                this.reloadCount = currentReloads;
+                
+                document.getElementById('input-discord').value = sessionStorage.getItem('vdu_discord') || '';
+                document.getElementById('input-roblox').value = sessionStorage.getItem('vdu_roblox') || '';
+            },
+
+            startShift: function(discord, roblox) {
+                this.discordName = discord;
+                this.robloxName = roblox;
+                this.startTime = Date.now();
+                system.log(`VDU SIL-02 SYSTEM READY.`);
+                system.log(`OP: ${roblox} (${discord}) | RL: ${this.reloadCount}x`, "info");
+            },
+
+            showReport: function() {
+                const endTime = Date.now();
+                const durationMs = endTime - this.startTime;
+                const m = Math.floor(durationMs / 60000);
+                const s = Math.floor((durationMs % 60000) / 1000);
+                const tepatWaktu = this.servedTrains - this.delayedTrains;
+                const rasio = Math.round((tepatWaktu / this.servedTrains) * 100) || 0;
+
+                const content = `
+                    <div class="flex justify-between border-b border-gray-700 pb-1 pt-2">
+                        <span>OP DISCORD:</span> <span class="text-white">${this.discordName}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1">
+                        <span>OP ROBLOX:</span> <span class="text-white">${this.robloxName}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1 mt-2">
+                        <span>STATUS SESI:</span> <span class="text-[#0f0]">SELESAI (${this.targetTrains} KA)</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1">
+                        <span>WAKTU MULAI:</span> <span class="text-gray-300">${new Date(this.startTime).toLocaleTimeString('id-ID')}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1">
+                        <span>DURASI AKTIF:</span> <span class="text-gray-300">${m}m ${s}s</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1">
+                        <span>TOTAL KA:</span> <span class="text-gray-300">${this.servedTrains}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1">
+                        <span>KA TEPAT WAKTU (< 2m):</span> <span class="text-[#0f0]">${tepatWaktu}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1">
+                        <span>KA TERTAHAN:</span> <span class="text-[#f00]">${this.delayedTrains}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-700 pb-1">
+                        <span>PUNCTUALITY:</span> <span class="text-[#ff0]">${rasio}%</span>
+                    </div>
+                    <div class="flex justify-between p-2 mt-2 bg-[#222]">
+                        <span>RELOAD EVENT (PENALTI):</span>
+                        <span class="${this.reloadCount > 0 ? 'text-[#f00]' : 'text-gray-500'}">${this.reloadCount}x</span>
+                    </div>
+                `;
+                
+                document.getElementById('report-content').innerHTML = content;
+                document.getElementById('shift-report-modal').classList.remove('hidden');
+                document.getElementById('shift-report-modal').classList.add('flex');
+                system.triggerAlarm("DINAS SELESAI.");
+            }
+        };
+
+        shiftStats.init();
+
+        function startGame() {
+            const disc = document.getElementById('input-discord').value.trim();
+            const rbx = document.getElementById('input-roblox').value.trim();
+            if(!disc || !rbx) { alert("Data wajib diisi."); return; }
+            sessionStorage.setItem('vdu_discord', disc);
+            sessionStorage.setItem('vdu_roblox', rbx);
+            document.getElementById('login-modal').classList.add('hidden');
+            shiftStats.startShift(disc, rbx);
+        }
 
         const signalPanel = {
             state: { pbd:false, tbd:false, tks:false, slgn:false, sdrt:false },
             toggle: function(key, desc) {
                 this.state[key] = !this.state[key];
                 document.getElementById(`btn-${key}`).classList.toggle('bg-indicator-on', this.state[key]);
-                system.log(`${desc}: ${this.state[key] ? 'AKTIF' : 'NONAKTIF'}.`, this.state[key] ? 'warn' : 'info');
-                if (key === 'sdrt' && this.state[key]) system.triggerAlarm('Sinyal Darurat diaktifkan! Sinyal masuk Merah.');
+                system.log(`${desc}: ${this.state[key] ? 'ON' : 'OFF'}.`, this.state[key] ? 'warn' : 'info');
+                if (key === 'sdrt' && this.state[key]) system.triggerAlarm('S.DARURAT ON.');
             }
         };
 
@@ -488,49 +623,51 @@
             svg.addEventListener('pointerup', endDrag); svg.addEventListener('pointercancel', endDrag);
         })();
 
-        // ================= BLOK SYSTEM & AI PPKA (DIKEMBALIKAN PENUH) =================
+        // ================= BLOK SYSTEM & AI PPKA =================
         const blockSystem = {
             state: { Barat: 'NORMAL', Timur: 'NORMAL' },
             requestBlock: function(dir) {
-                if(this.state[dir] !== 'NORMAL') { system.triggerAlarm(`Blok ${dir} tidak Normal!`); return; }
+                if(this.state[dir] !== 'NORMAL') { system.triggerAlarm(`Blok ${dir} not clear.`); return; }
                 this.state[dir] = 'MINTA_AMAN';
-                document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'MINTA AMAN';
-                document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-indicator-warn text-[9px] font-bold blinking';
-                system.log(`Mengirim sinyal MINTA AMAN ke Stasiun ${dir}...`, 'warn');
+                document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'MINTA';
+                document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-indicator-warn text-[9px] blinking';
+                system.log(`Minta blok -> ${dir}`);
 
                 setTimeout(() => {
                     if(this.state[dir] === 'MINTA_AMAN') {
                         this.state[dir] = 'DIBERI_AMAN';
-                        document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'BLOK AMAN';
-                        document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-indicator-on text-[9px] font-bold';
-                        system.triggerAlarm(`Stasiun ${dir} Memberikan Aman!`);
+                        document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'AMAN';
+                        document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-indicator-on text-[9px]';
+                        system.log(`Blok ${dir} AMAN.`, 'info');
                     }
-                }, 3000);
+                }, 2000);
             },
             incomingRequest: function(dir) {
                 if (this.state[dir] !== 'NORMAL') return false;
                 this.state[dir] = 'DIMINTA_TETANGGA';
                 const el = document.getElementById(`ind-blok-${dir.toLowerCase()}`);
-                el.innerText = 'DIMINTA';
-                el.className = 'btn-sil bg-indicator-err text-[9px] font-bold blinking';
-                system.triggerAlarm(`Stasiun ${dir} MEMINTA AMAN. Tekan BERI AMAN untuk menyetujui.`);
+                el.innerText = 'REQ';
+                el.className = 'btn-sil bg-indicator-err text-[9px] blinking';
+                system.triggerAlarm(`Req Blok dari ${dir}.`);
                 return true;
             },
             grantBlock: function(dir) {
-                system.log(`Memberi status AMAN ke Stasiun ${dir}.`, 'info');
+                if(this.state[dir] !== 'DIMINTA_TETANGGA') return;
+                system.log(`Aman given -> ${dir}.`);
                 this.state[dir] = 'DIBERI_AMAN';
-                document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'MEMBERI AMAN';
-                document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-indicator-on text-[9px] font-bold';
+                document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'MEMBERI';
+                document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-indicator-on text-[9px]';
             }
         };
 
         const autoPilot = {
             enabled: false, timers: { Barat: null, Timur: null }, pendingRequest: { Barat: null, Timur: null },
             toggle: function() {
+                if (!shiftStats.startTime) { system.triggerAlarm("Akses ditolak."); return; }
                 this.enabled = !this.enabled;
-                document.getElementById('btn-autopilot').innerHTML = this.enabled ? 'AI AKTIF' : 'AI NONAKTIF';
+                document.getElementById('btn-autopilot').innerHTML = this.enabled ? 'AI ON' : 'AI OFF';
                 document.getElementById('btn-autopilot').classList.toggle('bg-indicator-on', this.enabled);
-                system.log(`Otomatisasi AI PPKA Tetangga: ${this.enabled ? 'DIAKTIFKAN' : 'DIMATIKAN'}.`, 'warn');
+                system.log(`AI PPKA: ${this.enabled ? 'ON' : 'OFF'}.`, 'warn');
                 if (this.enabled) this.reschedule(); else { clearTimeout(this.timers.Barat); clearTimeout(this.timers.Timur); }
             },
             reschedule: function() { this.scheduleNext('Barat'); this.scheduleNext('Timur'); },
@@ -541,7 +678,6 @@
             tryIncomingRequest: function(dir) {
                 if (!this.enabled || blockSystem.state[dir] !== 'NORMAL') { this.scheduleNext(dir); return; }
                 const prefix = dir === 'Barat' ? 'B-' : 'C-';
-                // Cari rute yang jalurnya kosong
                 const free = Object.keys(ROUTE_TABLE).filter(k => k.startsWith(prefix) && !interlocking.trainsAtPlatform[k.split('|')[1]] && !interlocking.weselLock[Object.keys(ROUTE_TABLE[k].w)[0]] && ROUTE_TABLE[k].tReq.every(t => interlocking.tracks[t] === 0));
                 if (free.length === 0) { this.scheduleNext(dir); return; }
                 const [origin, dest] = free[Math.floor(Math.random() * free.length)].split('|');
@@ -550,7 +686,7 @@
             }
         };
 
-        // ================= INTERLOCKING & ROUTES =================
+        // ================= INTERLOCKING =================
         const ROUTE_TABLE = {
             'B-Up|J2': { w:{W11:'N'}, tReq:['App-B-Up','W11','J2'], sigEl:'sig-Msk-B-Up' },
             'B-Up|J1': { w:{W11:'R'}, tReq:['App-B-Up','W11','J1'], sigEl:'sig-Msk-B-Up' },
@@ -593,8 +729,6 @@
             'J4|Timur': 'M 600 120 L 800 120 C 875 120, 875 200, 950 200 L 1100 200',
         };
 
-        function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
-
         const interlocking = {
             mode: 'idle', tempOrigin: null, activeRoutes: [], routeCounter: 0,
             wesel: { W11: 'N', W12: 'N', W13: 'N', W14: 'N' },
@@ -604,17 +738,17 @@
 
             toggleWesel: function(id) {
                 if (zoomPan.suppressClick) return;
-                if (this.weselLock[id]) { system.triggerAlarm(`Wesel ${id} TERKUNCI!`); return; }
+                if (this.weselLock[id]) { system.triggerAlarm(`Wesel ${id} LOCK`); return; }
                 this.wesel[id] = this.wesel[id] === 'N' ? 'R' : 'N';
-                system.log(`Wesel ${id} -> ${this.wesel[id] === 'N' ? 'NORMAL' : 'REVERSE'}`);
+                system.log(`Wsl ${id} -> ${this.wesel[id]}`);
                 this.render();
             },
             setOverlay: function(text) {
                 const el = document.getElementById('ui-overlay');
                 el.textContent = text; el.classList.remove('hidden');
             },
-            startRouteSet: function() { this.mode = 'arrival'; this.tempOrigin = null; this.setOverlay('KLIK SINYAL ASAL -> KLIK JALUR TUJUAN'); },
-            startDepartureSet: function() { this.mode = 'departure'; this.tempOrigin = null; this.setOverlay('KLIK JALUR KA -> KLIK SINYAL KELUAR'); },
+            startRouteSet: function() { this.mode = 'arrival'; this.tempOrigin = null; this.setOverlay('PILIH ASAL -> TUJUAN'); },
+            startDepartureSet: function() { this.mode = 'departure'; this.tempOrigin = null; this.setOverlay('PILIH JALUR -> KELUAR'); },
             selectOrigin: function(sigId) { if (!zoomPan.suppressClick && this.mode === 'arrival') this.tempOrigin = sigId; },
             
             trackClicked: function(trackId) {
@@ -622,7 +756,7 @@
                 if (this.mode === 'arrival' && this.tempOrigin) {
                     this.formArrivalRoute(this.tempOrigin, trackId);
                 } else if (this.mode === 'departure') {
-                    if (!this.trainsAtPlatform[trackId]) { system.triggerAlarm(`Jalur ${trackId} kosong!`); return; }
+                    if (!this.trainsAtPlatform[trackId]) return;
                     this.tempOrigin = trackId;
                 }
             },
@@ -634,25 +768,24 @@
 
             formArrivalRoute: function(origin, dest) {
                 let blockDir = origin.includes('B-') ? 'Barat' : 'Timur';
-                if(blockSystem.state[blockDir] !== 'DIBERI_AMAN') { system.triggerAlarm(`Blok ${blockDir} belum Aman!`); return false; }
+                if(blockSystem.state[blockDir] !== 'DIBERI_AMAN') { system.triggerAlarm(`Blok belum aman`); return false; }
                 const routeDef = ROUTE_TABLE[`${origin}|${dest}`];
-                if (!routeDef) { system.triggerAlarm(`Rute tidak valid!`); return false; }
+                if (!routeDef) { system.triggerAlarm(`Rute invalid`); return false; }
                 
                 const wReq = Object.keys(routeDef.w);
-                if (wReq.some(w => this.weselLock[w])) { system.triggerAlarm(`Wesel terkunci!`); return false; }
-                if (routeDef.tReq.some(t => this.tracks[t] > 0)) { system.triggerAlarm("Petak terisi!"); return false; }
+                if (wReq.some(w => this.weselLock[w])) { system.triggerAlarm(`Wesel terkunci`); return false; }
+                if (routeDef.tReq.some(t => this.tracks[t] > 0)) { system.triggerAlarm("Petak isi"); return false; }
 
                 wReq.forEach(w => { this.wesel[w] = routeDef.w[w]; this.weselLock[w] = true; });
                 routeDef.tReq.forEach(t => this.tracks[t] = 1);
 
                 this.activeRoutes.push({ id: ++this.routeCounter, type: 'arrival', origin, dest, wReq, tReq: routeDef.tReq, sigEl: routeDef.sigEl, simulating: false });
                 document.getElementById(routeDef.sigEl).classList.replace('sig-red', 'sig-green');
-                system.log(`RUTE MASUK (${this.routeCounter}) TERBENTUK.`, "info");
+                system.log(`Rute MSK #${this.routeCounter} OK.`, "info");
                 this.render(); 
                 
                 this.mode = 'idle'; document.getElementById('ui-overlay').classList.add('hidden');
                 
-                // Cek Trigger AutoPilot
                 if (blockDir && autoPilot.pendingRequest[blockDir]) {
                     autoPilot.pendingRequest[blockDir] = null;
                     setTimeout(() => simulator.spawnTrain(blockDir), 1500);
@@ -664,17 +797,17 @@
             formDepartureRoute: function(trackId, direction) {
                 const routeDef = ROUTE_TABLE_DEP[`${trackId}|${direction}`];
                 if (!routeDef) return false;
-                if (blockSystem.state[direction] !== 'DIBERI_AMAN') { system.triggerAlarm(`Blok ${direction} belum Aman!`); return false; }
+                if (blockSystem.state[direction] !== 'DIBERI_AMAN') { system.triggerAlarm(`Blok blm aman`); return false; }
                 const wReq = Object.keys(routeDef.w);
-                if (wReq.some(w => this.weselLock[w])) { system.triggerAlarm(`Wesel terkunci!`); return false; }
-                if (routeDef.tReq.some(t => this.tracks[t] > 0)) { system.triggerAlarm("Petak terisi!"); return false; }
+                if (wReq.some(w => this.weselLock[w])) { system.triggerAlarm(`Wesel lock`); return false; }
+                if (routeDef.tReq.some(t => this.tracks[t] > 0)) { system.triggerAlarm("Petak isi"); return false; }
 
                 wReq.forEach(w => { this.wesel[w] = routeDef.w[w]; this.weselLock[w] = true; });
                 routeDef.tReq.forEach(t => this.tracks[t] = 1);
 
                 this.activeRoutes.push({ id: ++this.routeCounter, type: 'departure', origin: trackId, dest: direction, wReq, tReq: routeDef.tReq, sigEl: routeDef.sigEl, simulating: false });
                 document.getElementById(routeDef.sigEl).classList.replace('sig-red', 'sig-green');
-                system.log(`RUTE BERANGKAT (${this.routeCounter}) TERBENTUK.`, "info");
+                system.log(`Rute KLR #${this.routeCounter} OK.`, "info");
                 this.render();
 
                 this.mode = 'idle'; document.getElementById('ui-overlay').classList.add('hidden');
@@ -684,17 +817,17 @@
 
             executeTPR: function() {
                 const idx = [...this.activeRoutes].reverse().findIndex(r => !r.simulating);
-                if (idx === -1) { system.triggerAlarm("Tidak ada rute yang dapat dibatalkan."); return; }
+                if (idx === -1) { system.triggerAlarm("No route to TPR."); return; }
                 const realIdx = this.activeRoutes.length - 1 - idx;
                 const route = this.activeRoutes.splice(realIdx, 1)[0];
 
                 document.getElementById(route.sigEl).classList.replace('sig-green', 'sig-red');
-                system.log(`TPR Rute #${route.id}.. Menunggu Time-Release (3 dtk)...`, "warn");
+                system.log(`TPR #${route.id}.. Time-Release 3s..`, "warn");
 
                 setTimeout(() => {
                     route.wReq.forEach(w => this.weselLock[w] = false);
                     route.tReq.forEach(t => { if(this.tracks[t] === 1) this.tracks[t] = 0; });
-                    system.log(`TPR #${route.id} SELESAI.`);
+                    system.log(`TPR #${route.id} OK.`);
                     this.render();
                 }, 3000);
             },
@@ -729,7 +862,7 @@
             makeMarker: function(id, color) {
                 const group = document.getElementById('viewport-group');
                 const c = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
-                c.setAttribute('r', '7'); c.setAttribute('fill', color); c.setAttribute('stroke', '#fff'); c.setAttribute('class', 'train-marker');
+                c.setAttribute('r', '5'); c.setAttribute('fill', color); c.setAttribute('stroke', '#fff'); c.setAttribute('class', 'train-marker');
                 const l = document.createElementNS("http://www.w3.org/2000/svg", 'text');
                 l.setAttribute('class', 'train-label'); l.setAttribute('fill', color); l.setAttribute('text-anchor', 'middle');
                 group.appendChild(c); group.appendChild(l);
@@ -743,6 +876,8 @@
                 const duration = Math.max(1200, (totalLength / this.SPEED_PX_PER_SEC) * 1000);
                 let startTime = null, lastSegIdx = -1;
                 
+                function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+
                 function frame(ts) {
                     if (!startTime) startTime = ts;
                     const t = Math.min(1, (ts - startTime) / duration);
@@ -750,7 +885,7 @@
                     const pt = tempPath.getPointAtLength(eased * totalLength);
                     
                     refs.marker.setAttribute('cx', pt.x); refs.marker.setAttribute('cy', pt.y);
-                    refs.label.setAttribute('x', pt.x); refs.label.setAttribute('y', pt.y - 12);
+                    refs.label.setAttribute('x', pt.x); refs.label.setAttribute('y', pt.y - 10);
                     refs.label.textContent = labelText;
 
                     let segIdx = eased < 0.3 ? 0 : eased < 0.7 ? 1 : 2;
@@ -774,7 +909,7 @@
                 document.getElementById(route.sigEl).classList.replace('sig-green', 'sig-red');
                 const refs = this.makeMarker(trainId, color);
                 this.animateAlongPath(refs, ROUTE_PATHS[`${route.origin}|${route.dest}`], route.tReq, label, () => {
-                    interlocking.trainsAtPlatform[route.dest] = { trainId, label, color, refs };
+                    interlocking.trainsAtPlatform[route.dest] = { trainId, label, color, refs, arrivalTime: Date.now() };
                     interlocking.activeRoutes = interlocking.activeRoutes.filter(r => r.id !== route.id);
                     blockSystem.state[dir] = 'NORMAL'; document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'NORMAL';
                     document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-sys text-[9px]';
@@ -793,6 +928,19 @@
                     blockSystem.state[dir] = 'NORMAL'; document.getElementById(`ind-blok-${dir.toLowerCase()}`).innerText = 'NORMAL';
                     document.getElementById(`ind-blok-${dir.toLowerCase()}`).className = 'btn-sil bg-sys text-[9px]';
                     route.wReq.forEach(w => interlocking.weselLock[w] = false); interlocking.render();
+                    
+                    const waitTimeSeconds = (Date.now() - parked.arrivalTime) / 1000;
+                    if (waitTimeSeconds > 120) { // 120 Detik = 2 Menit
+                        shiftStats.delayedTrains++;
+                        system.log(`${parked.label} KLR TERTAHAN (${Math.round(waitTimeSeconds)}s)`, "warn");
+                    } else {
+                        system.log(`${parked.label} KLR TEPAT WAKTU.`, "info");
+                    }
+
+                    shiftStats.servedTrains++;
+                    if (shiftStats.servedTrains === shiftStats.targetTrains) {
+                        setTimeout(() => shiftStats.showReport(), 1000);
+                    }
                 });
             },
             clearTracks: function() {
@@ -803,8 +951,7 @@
                 blockSystem.state = { Barat: 'NORMAL', Timur: 'NORMAL' };
                 ['barat','timur'].forEach(d => { document.getElementById(`ind-blok-${d}`).innerText = 'NORMAL'; document.getElementById(`ind-blok-${d}`).className = 'btn-sil bg-sys text-[9px]'; });
                 document.querySelectorAll('.signal-head').forEach(el => el.classList.replace('sig-green', 'sig-red'));
-                interlocking.render(); system.log("Admin: Normalisasi jalur selesai.");
-                if (autoPilot.enabled) autoPilot.reschedule();
+                interlocking.render(); system.log("Force Normal.");
             }
         };
 
@@ -820,7 +967,7 @@
             startRecording: async function() {
                 if (this.recording) return;
                 try { this.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } 
-                catch (e) { system.log('Mic ditolak / Error', 'err'); return; }
+                catch (e) { system.log('Mic err.', 'err'); return; }
                 this.recording = true; this.chunks = [];
                 document.getElementById('mic-btn').classList.add('recording');
                 
@@ -868,7 +1015,6 @@
                 const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3500;
                 const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 8;
                 
-                // Efek Kresek (White Noise Squelch)
                 const noiseLen = ctx.sampleRate * 2;
                 const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
                 const output = noiseBuf.getChannelData(0);
@@ -888,7 +1034,7 @@
                 src.connect(hp); hp.connect(lp); lp.connect(comp); comp.connect(ctx.destination);
                 
                 noiseSrc.start(now);
-                src.start(now + 0.15); // Suara asli didelay sedikit biar suara kresek masuk duluan
+                src.start(now + 0.15); 
                 src.onended = () => { setTimeout(() => { noiseSrc.stop(); }, 200); };
             }
         };
